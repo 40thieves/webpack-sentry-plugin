@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import webpack from 'webpack'
 
-import SentryWebpackPlugin from '../index'
+import SentryWebpackPlugin from '../src/index'
 
 import {
 	cleanUpRelease,
