@@ -4,7 +4,14 @@ import webpack from 'webpack'
 
 import SentryWebpackPlugin from '../index'
 
-import { cleanUpRelease, fetchRelease, create } from './sentry-helpers'
+import {
+	cleanUpRelease,
+	fetchRelease,
+	SENTRY_API_KEY,
+	SENTRY_ORGANISATION,
+	SENTRY_PROJECT,
+	RELEASE_VERSION
+} from './sentry-helpers'
 
 const OUTPUT_PATH = path.resolve(__dirname, '../.tmp')
 
@@ -12,7 +19,7 @@ function ensureOutputPath() {
 	if (!fs.existsSync(OUTPUT_PATH)) fs.mkdirSync(OUTPUT_PATH)
 }
 
-function createWebpackConfig() {
+function createWebpackConfig(sentryConfig) {
 	return {
 		devtool: 'source-map',
 		entry: path.resolve(__dirname, 'fixtures/index.js'),
@@ -21,9 +28,19 @@ function createWebpackConfig() {
 			filename: 'sentry-test.bundle.js'
 		},
 		plugins: [
-			new SentryWebpackPlugin()
+			configureSentryPlugin(sentryConfig)
 		]
 	}
+}
+
+function configureSentryPlugin(config) {
+	const options = Object.assign({}, config, {
+		organisation: SENTRY_ORGANISATION,
+		project: SENTRY_PROJECT,
+		apiKey: SENTRY_API_KEY
+	})
+
+	return new SentryWebpackPlugin(options)
 }
 
 function runWebpack(config) {
@@ -41,19 +58,29 @@ function expectNoCompileError({ errors }) {
 	return expect(errors).toBeUndefined();
 }
 
+/*
+ * Work around Jest not having expect.fail()
+ */
+function expectFailure(msg) {
+	return () => {
+		throw new Error(msg)
+	}
+}
+
+beforeEach(ensureOutputPath)
 afterEach(cleanUpRelease)
 
 it('creates Sentry release', () => {
-	ensureOutputPath()
+	const release = RELEASE_VERSION
 
-	const release = 'test-release'
-
-	return runWebpack(createWebpackConfig())
+	return runWebpack(createWebpackConfig({ release }))
 		.then(expectNoCompileError)
 		.then(() => {
-			return fetchRelease(release).then(({ version }) => {
-				expect(version).toEqual(release)
-			})
+			return fetchRelease(release)
+				.then(({ version }) => {
+					expect(version).toEqual(release)
+				})
+				.catch(expectFailure('Release not found'))
 		})
 })
 

@@ -1,27 +1,55 @@
+import _ from 'lodash'
+import request from 'request-promise'
+
+const BASE_SENTRY_URL = `https://sentry.io/api/0/projects`
+
 // TODO:
-// Class that implements apply() fn
-// Find source map files
 // Creates Sentry release
 // Uploads files to Sentry release
 
 // Config options?
 
-// Create release request
-// request({
-// 	url: `${SENTRY_URL}/`,
-// 	method: 'POST',
-// 	auth: {
-// 		bearer: SENTRY_API_KEY
-// 	},
-// 	headers: {
-// 		'Content-Type': 'application/json'
-// 	},
-// 	body: JSON.stringify({ version: 'test-release' }),
-// 	resolveWithFullResponse: true
-// })
-
 export default class SentryPlugin {
-	apply (compiler) {
+	constructor (options) {
+		this.organisationSlug = options.organisation
+		this.projectSlug = options.project
+		this.apiKey = options.apiKey
 
+		// TODO: handle function
+		this.releaseVersion = options.release
+	}
+
+	apply (compiler) {
+		compiler.plugin('after-emit', (compilation, cb) => {
+			// const sourceMaps = this.getSourceMaps(compilation)
+
+			this.createRelease()
+				.then(() => cb())
+		})
+	}
+
+	getSourceMaps (compilation) {
+		return _(compilation.assets)
+			.map((asset, name) => ({ name, path: asset.existsAt }))
+			.filter(({name}) => /.map$/.test(name))
+			.value()
+	}
+
+	createRelease () {
+		return request({
+			url: this.sentryReleaseUrl(),
+			method: 'POST',
+			auth: {
+				bearer: this.apiKey
+			},
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({version: this.releaseVersion})
+		})
+	}
+
+	sentryReleaseUrl () {
+		return `${BASE_SENTRY_URL}/${this.organisationSlug}/${this.projectSlug}/releases/`
 	}
 }
