@@ -1,0 +1,26 @@
+{
+  "name": "webpack-sentry-plugin",
+  "version": "0.0.1",
+  "description": "Webpack Sentry plugin",
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watch"
+  },
+  "author": "Alasdair Smith <ali@alasdairsmith.co.uk>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-jest": "^17.0.2",
+    "babel-polyfill": "^6.20.0",
+    "babel-preset-es2015": "^6.18.0",
+    "jest": "^17.0.3",
+    "webpack": "^1.14.0"
+  },
+  "dependencies": {
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
+  },
+  "jest": {
+    "notify": true,
+    "testPathDirs": ["test"]
+  }
+}
