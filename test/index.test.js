@@ -9,8 +9,7 @@ import {
 	fetchRelease,
 	SENTRY_API_KEY,
 	SENTRY_ORGANISATION,
-	SENTRY_PROJECT,
-	RELEASE_VERSION
+	SENTRY_PROJECT
 } from './sentry-helpers'
 
 const OUTPUT_PATH = path.resolve(__dirname, '../.tmp')
@@ -68,12 +67,32 @@ function expectFailure(msg) {
 }
 
 beforeEach(ensureOutputPath)
-afterEach(cleanUpRelease)
+// afterEach(cleanUpRelease('test-release'))
 
-it('creates Sentry release', () => {
-	const release = RELEASE_VERSION
+describe('creating Sentry release', () => {
+	afterAll(cleanUpRelease('string-release'))
+	afterAll(cleanUpRelease('function-release'))
 
-	return runWebpack(createWebpackConfig({ release }))
+	it('with string version', () => {
+		const release = 'string-release'
+
+		return runWebpack(createWebpackConfig({ release }))
+			.then(expectNoCompileError)
+			.then(() => {
+				return fetchRelease(release)
+					.then(({ version }) => {
+						expect(version).toEqual(release)
+					})
+					.catch(expectFailure('Release not found'))
+			})
+	})
+
+	it('with version from function', () => {
+	  const release = 'function-release'
+
+		return runWebpack(createWebpackConfig({
+			release: () => release
+		}))
 		.then(expectNoCompileError)
 		.then(() => {
 			return fetchRelease(release)
@@ -82,6 +101,7 @@ it('creates Sentry release', () => {
 				})
 				.catch(expectFailure('Release not found'))
 		})
+	})
 })
 
 it('uploads files to Sentry release')

@@ -7,7 +7,7 @@ const BASE_SENTRY_URL = `https://sentry.io/api/0/projects`
 // Creates Sentry release
 // Uploads files to Sentry release
 
-// Config options?
+// Other config options?
 
 export default class SentryPlugin {
 	constructor (options) {
@@ -15,8 +15,9 @@ export default class SentryPlugin {
 		this.projectSlug = options.project
 		this.apiKey = options.apiKey
 
-		// TODO: handle function
-		this.releaseVersion = options.release
+		this.releaseVersion = _.isFunction(options.release)
+			? options.release()
+			: options.release
 	}
 
 	apply (compiler) {
@@ -25,6 +26,7 @@ export default class SentryPlugin {
 
 			this.createRelease()
 				.then(() => cb())
+				// TODO: Error handling
 		})
 	}
 

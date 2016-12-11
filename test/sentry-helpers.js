@@ -8,26 +8,26 @@ export const {
 	SENTRY_ORGANISATION,
 	SENTRY_PROJECT
 } = process.env
-export const RELEASE_VERSION = 'test-release'
 
 const SENTRY_URL = `https://sentry.io/api/0/projects/${SENTRY_ORGANISATION}/${SENTRY_PROJECT}`
 
-export function cleanUpRelease() {
-	return request({
-		url: `${SENTRY_URL}/releases/${RELEASE_VERSION}/`,
-		method: 'DELETE',
-		auth: {
-			bearer: SENTRY_API_KEY
-		},
-		resolveWithFullResponse: true
-	})
-	.catch((err) => {
-		console.error(`ERROR CLEANING UP RELEASE!
+export function cleanUpRelease(releaseVersion) {
+	return () => {
+		return request({
+			url: `${SENTRY_URL}/releases/${releaseVersion}/`,
+			method: 'DELETE',
+			auth: {
+				bearer: SENTRY_API_KEY
+			}
+		})
+		.catch((err) => {
+			console.error(`ERROR CLEANING UP RELEASE!
+Release version: ${releaseVersion}
 Status: ${err.statusCode}
 Error: ${err.error}`
-		)
-		return err
-	})
+			)
+		})
+	}
 }
 
 export function fetchRelease(version) {
