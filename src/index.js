@@ -1,16 +1,16 @@
 import _ from 'lodash'
 import request from 'request-promise'
+import fs from 'fs'
 
 const BASE_SENTRY_URL = `https://sentry.io/api/0/projects`
 
 // TODO:
-// Creates Sentry release
 // Uploads files to Sentry release
 
 // Other config options?
 
 export default class SentryPlugin {
-	constructor (options) {
+	constructor(options) {
 		this.organisationSlug = options.organisation
 		this.projectSlug = options.project
 		this.apiKey = options.apiKey
@@ -20,26 +20,38 @@ export default class SentryPlugin {
 			: options.release
 	}
 
-	apply (compiler) {
+	apply(compiler) {
 		compiler.plugin('after-emit', (compilation, cb) => {
-			// const sourceMaps = this.getSourceMaps(compilation)
+			const files = this.getFiles(compilation)
 
 			this.createRelease()
+				.then(() => this.uploadFiles(files))
 				.then(() => cb())
 				// TODO: Error handling
 		})
 	}
 
-	getSourceMaps (compilation) {
+	getFiles(compilation) {
+		// const bundleFiles = this.getBundleFiles(compilation)
+		return this.getSourceMaps(compilation)
+	}
+
+	getSourceMaps(compilation) {
 		return _(compilation.assets)
 			.map((asset, name) => ({ name, path: asset.existsAt }))
 			.filter(({name}) => /.map$/.test(name))
 			.value()
 	}
 
-	createRelease () {
+	// getBundleFiles(compilation) {
+	// 	return _.reduce(compilation.assets, (acc, asset, name) => {
+	//
+	// 	}, [])
+	// }
+
+	createRelease() {
 		return request({
-			url: this.sentryReleaseUrl(),
+			url: `${this.sentryReleaseUrl()}/`,
 			method: 'POST',
 			auth: {
 				bearer: this.apiKey
@@ -47,11 +59,29 @@ export default class SentryPlugin {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({version: this.releaseVersion})
+			body: JSON.stringify({ version: this.releaseVersion })
 		})
 	}
 
-	sentryReleaseUrl () {
-		return `${BASE_SENTRY_URL}/${this.organisationSlug}/${this.projectSlug}/releases/`
+	uploadFiles(files) {
+		return Promise.all(files.map(this.uploadFile.bind(this)))
+	}
+
+	uploadFile({ path, name }) {
+		return request({
+			url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
+			method: 'POST',
+			auth: {
+				bearer: this.apiKey
+			},
+			formData: {
+				file: fs.createReadStream(path),
+				name
+			}
+		})
+	}
+
+	sentryReleaseUrl() {
+		return `${BASE_SENTRY_URL}/${this.organisationSlug}/${this.projectSlug}/releases`
 	}
 }

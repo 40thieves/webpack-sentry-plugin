@@ -69,7 +69,8 @@ function expectFailure(msg) {
 
 function expectReleaseContainsFile(filename) {
 	return (files) => {
-		expect(files.filter(({ name }) => name === filename)).toHaveLength(1)
+		const filenames = files.map(({ name }) => name)
+		expect(filenames).toContain(filename)
 	}
 }
 
