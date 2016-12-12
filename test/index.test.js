@@ -7,6 +7,7 @@ import SentryWebpackPlugin from '../src/index'
 import {
 	cleanUpRelease,
 	fetchRelease,
+	fetchFiles,
 	SENTRY_API_KEY,
 	SENTRY_ORGANISATION,
 	SENTRY_PROJECT
@@ -66,8 +67,13 @@ function expectFailure(msg) {
 	}
 }
 
+function expectReleaseContainsFile(filename) {
+	return (files) => {
+		expect(files.filter(({ name }) => name === filename)).toHaveLength(1)
+	}
+}
+
 beforeEach(ensureOutputPath)
-// afterEach(cleanUpRelease('test-release'))
 
 describe('creating Sentry release', () => {
 	afterAll(cleanUpRelease('string-release'))
@@ -104,4 +110,31 @@ describe('creating Sentry release', () => {
 	})
 })
 
-it('uploads files to Sentry release')
+describe('uploading files to Sentry release', () => {
+	afterEach(cleanUpRelease('test-release'))
+
+	it('uploads source map', () => {
+		const release = 'test-release'
+
+		return runWebpack(createWebpackConfig({ release }))
+			.then(expectNoCompileError)
+			.then(() => {
+				return fetchFiles(release)
+					.then(expectReleaseContainsFile('sentry-test.bundle.js.map'))
+			})
+	})
+
+	it('uploads source bundle', () => {
+	  const release = 'test-release'
+
+		return runWebpack(createWebpackConfig({ release }))
+			.then(expectNoCompileError)
+			.then(() => {
+				return fetchFiles(release)
+					.then(expectReleaseContainsFile('sentry-test.bundle.js'))
+			})
+	})
+
+	// TODO: uploads multiple bundles
+})
+

@@ -36,8 +36,16 @@ export function fetchRelease(version) {
 		auth: {
 			bearer: SENTRY_API_KEY
 		},
-		json: true,
-		resolveWithFullResponse: true
+		json: true
 	})
-	.then(({ body }) => body)
+}
+
+export function fetchFiles(version) {
+	return request({
+		url: `${SENTRY_URL}/releases/${version}/files/`,
+		auth: {
+			bearer: SENTRY_API_KEY
+		},
+		json: true
+	})
 }
