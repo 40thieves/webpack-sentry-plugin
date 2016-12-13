@@ -19,18 +19,20 @@ function ensureOutputPath() {
 	if (!fs.existsSync(OUTPUT_PATH)) fs.mkdirSync(OUTPUT_PATH)
 }
 
-function createWebpackConfig(sentryConfig) {
-	return {
+function createWebpackConfig(sentryConfig, webpackConfig) {
+	return Object.assign({}, {
 		devtool: 'source-map',
-		entry: path.resolve(__dirname, 'fixtures/index.js'),
+		entry: {
+			index: path.resolve(__dirname, 'fixtures/index.js')
+		},
 		output: {
 			path: OUTPUT_PATH,
-			filename: 'sentry-test.bundle.js'
+			filename: '[name].bundle.js'
 		},
 		plugins: [
 			configureSentryPlugin(sentryConfig)
 		]
-	}
+	}, webpackConfig)
 }
 
 function configureSentryPlugin(config) {
@@ -71,6 +73,17 @@ function expectReleaseContainsFile(filename) {
 	return (files) => {
 		const filenames = files.map(({ name }) => name)
 		expect(filenames).toContain(filename)
+
+		return Promise.resolve(files)
+	}
+}
+
+function expectReleaseDoesNotContainFile(filename) {
+	return (files) => {
+		const filenames = files.map(({ name }) => name)
+		expect(filenames).not.toContain(filename)
+
+		return Promise.resolve(files)
 	}
 }
 
@@ -114,28 +127,58 @@ describe('creating Sentry release', () => {
 describe('uploading files to Sentry release', () => {
 	afterEach(cleanUpRelease('test-release'))
 
-	it('uploads source map', () => {
+	it('uploads source and matching source map', () => {
 		const release = 'test-release'
 
 		return runWebpack(createWebpackConfig({ release }))
 			.then(expectNoCompileError)
 			.then(() => {
 				return fetchFiles(release)
-					.then(expectReleaseContainsFile('sentry-test.bundle.js.map'))
+					.then(expectReleaseContainsFile('index.bundle.js'))
+					.then(expectReleaseContainsFile('index.bundle.js.map'))
 			})
 	})
 
-	it('uploads source bundle', () => {
-	  const release = 'test-release'
+	it('filters files based on include', () => {
+		const release = 'test-release'
 
-		return runWebpack(createWebpackConfig({ release }))
+		return runWebpack(createWebpackConfig({
+			release,
+			include: /foo.bundle.js/
+		}, {
+			entry: {
+				foo: path.resolve(__dirname, 'fixtures/foo.js'),
+				bar: path.resolve(__dirname, 'fixtures/bar.js')
+			}
+		}))
+		.then(expectNoCompileError)
+		.then(() => {
+			return fetchFiles(release)
+				.then(expectReleaseContainsFile('foo.bundle.js'))
+				.then(expectReleaseContainsFile('foo.bundle.js.map'))
+				.then(expectReleaseDoesNotContainFile('bar.bundle.js'))
+				.then(expectReleaseDoesNotContainFile('bar.bundle.js.map'))
+		})
+	})
+
+	it('filters files based on exclude', () => {
+		const release = 'test-release'
+
+		return runWebpack(createWebpackConfig({
+			release,
+			exclude: /foo.bundle.js/
+		}, {
+			entry: {
+				foo: path.resolve(__dirname, 'fixtures/foo.js'),
+				bar: path.resolve(__dirname, 'fixtures/bar.js')
+			}
+		}))
 			.then(expectNoCompileError)
 			.then(() => {
 				return fetchFiles(release)
-					.then(expectReleaseContainsFile('sentry-test.bundle.js'))
+					.then(expectReleaseDoesNotContainFile('foo.bundle.js'))
+					.then(expectReleaseDoesNotContainFile('foo.bundle.js.map'))
 			})
 	})
-
-	// TODO: uploads multiple bundles
 })
 

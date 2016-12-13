@@ -4,11 +4,6 @@ import fs from 'fs'
 
 const BASE_SENTRY_URL = `https://sentry.io/api/0/projects`
 
-// TODO:
-// Uploads files to Sentry release
-
-// Other config options?
-
 export default class SentryPlugin {
 	constructor(options) {
 		this.organisationSlug = options.organisation
@@ -18,6 +13,9 @@ export default class SentryPlugin {
 		this.releaseVersion = _.isFunction(options.release)
 			? options.release()
 			: options.release
+
+		this.include = options.include
+		this.exclude = options.exclude
 	}
 
 	apply(compiler) {
@@ -32,22 +30,19 @@ export default class SentryPlugin {
 	}
 
 	getFiles(compilation) {
-		// const bundleFiles = this.getBundleFiles(compilation)
-		return this.getSourceMaps(compilation)
+		return _.reduce(compilation.assets, (acc, asset, name) => {
+			return this.isIncludeOrExclude(name)
+				? acc.concat({ name, path: asset.existsAt })
+				: acc
+		}, [])
 	}
 
-	getSourceMaps(compilation) {
-		return _(compilation.assets)
-			.map((asset, name) => ({ name, path: asset.existsAt }))
-			.filter(({name}) => /.map$/.test(name))
-			.value()
-	}
+	isIncludeOrExclude(filename) {
+		const isIncluded = this.include ? this.include.test(filename) : true
+		const isExcluded = this.exclude ? this.exclude.test(filename) : false
 
-	// getBundleFiles(compilation) {
-	// 	return _.reduce(compilation.assets, (acc, asset, name) => {
-	//
-	// 	}, [])
-	// }
+		return isIncluded && !isExcluded
+	}
 
 	createRelease() {
 		return request({
