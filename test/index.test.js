@@ -52,9 +52,7 @@ describe('creating Sentry release', () => {
 			.then(expectNoCompileError)
 			.then(() => {
 				return fetchRelease(release)
-					.then(({ version }) => {
-						expect(version).toEqual(release)
-					})
+					.then(({ version }) => expect(version).toEqual(release))
 					.catch(expectNoFailure('Release not found'))
 			})
 	})
@@ -68,9 +66,7 @@ describe('creating Sentry release', () => {
 		.then(expectNoCompileError)
 		.then(() => {
 			return fetchRelease(release)
-				.then(({ version }) => {
-					expect(version).toEqual(release)
-				})
+				.then(({ version }) => expect(version).toEqual(release))
 				.catch(expectNoFailure('Release not found'))
 		})
 	})
