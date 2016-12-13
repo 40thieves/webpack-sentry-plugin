@@ -132,11 +132,9 @@ describe('uploading files to Sentry release', () => {
 
 		return runWebpack(createWebpackConfig({ release }))
 			.then(expectNoCompileError)
-			.then(() => {
-				return fetchFiles(release)
-					.then(expectReleaseContainsFile('index.bundle.js'))
-					.then(expectReleaseContainsFile('index.bundle.js.map'))
-			})
+			.then(() => fetchFiles(release))
+			.then(expectReleaseContainsFile('index.bundle.js'))
+			.then(expectReleaseContainsFile('index.bundle.js.map'))
 	})
 
 	it('filters files based on include', () => {
@@ -152,13 +150,11 @@ describe('uploading files to Sentry release', () => {
 			}
 		}))
 		.then(expectNoCompileError)
-		.then(() => {
-			return fetchFiles(release)
-				.then(expectReleaseContainsFile('foo.bundle.js'))
-				.then(expectReleaseContainsFile('foo.bundle.js.map'))
-				.then(expectReleaseDoesNotContainFile('bar.bundle.js'))
-				.then(expectReleaseDoesNotContainFile('bar.bundle.js.map'))
-		})
+		.then(() => fetchFiles(release))
+		.then(expectReleaseContainsFile('foo.bundle.js'))
+		.then(expectReleaseContainsFile('foo.bundle.js.map'))
+		.then(expectReleaseDoesNotContainFile('bar.bundle.js'))
+		.then(expectReleaseDoesNotContainFile('bar.bundle.js.map'))
 	})
 
 	it('filters files based on exclude', () => {
@@ -173,12 +169,10 @@ describe('uploading files to Sentry release', () => {
 				bar: path.resolve(__dirname, 'fixtures/bar.js')
 			}
 		}))
-			.then(expectNoCompileError)
-			.then(() => {
-				return fetchFiles(release)
-					.then(expectReleaseDoesNotContainFile('foo.bundle.js'))
-					.then(expectReleaseDoesNotContainFile('foo.bundle.js.map'))
-			})
+		.then(expectNoCompileError)
+		.then(() => fetchFiles(release))
+		.then(expectReleaseDoesNotContainFile('foo.bundle.js'))
+		.then(expectReleaseDoesNotContainFile('foo.bundle.js.map'))
 	})
 })
 
