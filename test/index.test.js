@@ -63,7 +63,7 @@ function expectNoCompileError({ errors }) {
 /*
  * Work around Jest not having expect.fail()
  */
-function expectFailure(msg) {
+function expectNoFailure(msg) {
 	return () => {
 		throw new Error(msg)
 	}
@@ -103,7 +103,7 @@ describe('creating Sentry release', () => {
 					.then(({ version }) => {
 						expect(version).toEqual(release)
 					})
-					.catch(expectFailure('Release not found'))
+					.catch(expectNoFailure('Release not found'))
 			})
 	})
 
@@ -119,7 +119,7 @@ describe('creating Sentry release', () => {
 				.then(({ version }) => {
 					expect(version).toEqual(release)
 				})
-				.catch(expectFailure('Release not found'))
+				.catch(expectNoFailure('Release not found'))
 		})
 	})
 })
