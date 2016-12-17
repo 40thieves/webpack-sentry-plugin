@@ -25,6 +25,7 @@
     "notify": true,
     "testPathDirs": [
       "test"
-    ]
+    ],
+    "mocksPattern": "test/mocks"
   }
 }

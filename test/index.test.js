@@ -39,6 +39,9 @@ function expectReleaseDoesNotContainFile(filename) {
 	}
 }
 
+// Don't mock HTTP requests - testing the correctness of the integration
+jest.unmock('request-promise')
+
 beforeEach(ensureOutputPath)
 
 describe('creating Sentry release', () => {
@@ -123,4 +126,3 @@ describe('uploading files to Sentry release', () => {
 		.then(expectReleaseDoesNotContainFile('foo.bundle.js.map'))
 	})
 })
-

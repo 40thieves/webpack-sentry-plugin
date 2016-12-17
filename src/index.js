@@ -25,7 +25,7 @@ export default class SentryPlugin {
 			this.createRelease()
 				.then(() => this.uploadFiles(files))
 				.then(() => cb())
-				// TODO: Error handling
+				.catch((err) => this.handleErrors(err, compilation, cb))
 		})
 	}
 
@@ -78,5 +78,10 @@ export default class SentryPlugin {
 
 	sentryReleaseUrl() {
 		return `${BASE_SENTRY_URL}/${this.organisationSlug}/${this.projectSlug}/releases`
+	}
+
+	handleErrors(err, compilation, cb) {
+		compilation.errors.push(`Sentry Plugin: ${err}`)
+		cb()
 	}
 }
