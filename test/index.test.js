@@ -48,11 +48,9 @@ describe('creating Sentry release', () => {
 		const release = 'string-release'
 
 		return runWebpack(createWebpackConfig({ release }))
-			.then(() => {
-				return fetchRelease(release)
-					.then(({ version }) => expect(version).toEqual(release))
-					.catch(expectNoFailure('Release not found'))
-			})
+			.then(() => fetchRelease(release))
+			.then(({ version }) => expect(version).toEqual(release))
+			.catch(expectNoFailure('Release not found'))
 	})
 
 	it('with version from function', () => {
@@ -61,20 +59,18 @@ describe('creating Sentry release', () => {
 		return runWebpack(createWebpackConfig({
 			release: () => release
 		}))
-		.then(() => {
-			return fetchRelease(release)
-				.then(({ version }) => expect(version).toEqual(release))
-				.catch(expectNoFailure('Release not found'))
-		})
+		.then(() => fetchRelease(release))
+		.then(({ version }) => expect(version).toEqual(release))
+		.catch(expectNoFailure('Release not found'))
 	})
 })
 
 describe('uploading files to Sentry release', () => {
-	afterEach(cleanUpRelease('test-release'))
+	const release = 'test-release'
+
+	afterEach(cleanUpRelease(release))
 
 	it('uploads source and matching source map', () => {
-		const release = 'test-release'
-
 		return runWebpack(createWebpackConfig({ release }))
 			.then(() => fetchFiles(release))
 			.then(expectReleaseContainsFile('index.bundle.js'))
@@ -82,8 +78,6 @@ describe('uploading files to Sentry release', () => {
 	})
 
 	it('filters files based on include', () => {
-		const release = 'test-release'
-
 		return runWebpack(createWebpackConfig({
 			release,
 			include: /foo.bundle.js/
@@ -101,8 +95,6 @@ describe('uploading files to Sentry release', () => {
 	})
 
 	it('filters files based on exclude', () => {
-		const release = 'test-release'
-
 		return runWebpack(createWebpackConfig({
 			release,
 			exclude: /foo.bundle.js/
