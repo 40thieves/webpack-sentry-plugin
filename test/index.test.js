@@ -10,10 +10,6 @@ function ensureOutputPath() {
 	}
 }
 
-function expectNoCompileError({ errors }) {
-	return expect(errors).toBeUndefined();
-}
-
 // Work around Jest not having expect.fail()
 function expectNoFailure(msg) {
 	return () => {
@@ -52,7 +48,6 @@ describe('creating Sentry release', () => {
 		const release = 'string-release'
 
 		return runWebpack(createWebpackConfig({ release }))
-			.then(expectNoCompileError)
 			.then(() => {
 				return fetchRelease(release)
 					.then(({ version }) => expect(version).toEqual(release))
@@ -66,7 +61,6 @@ describe('creating Sentry release', () => {
 		return runWebpack(createWebpackConfig({
 			release: () => release
 		}))
-		.then(expectNoCompileError)
 		.then(() => {
 			return fetchRelease(release)
 				.then(({ version }) => expect(version).toEqual(release))
@@ -82,7 +76,6 @@ describe('uploading files to Sentry release', () => {
 		const release = 'test-release'
 
 		return runWebpack(createWebpackConfig({ release }))
-			.then(expectNoCompileError)
 			.then(() => fetchFiles(release))
 			.then(expectReleaseContainsFile('index.bundle.js'))
 			.then(expectReleaseContainsFile('index.bundle.js.map'))
@@ -100,7 +93,6 @@ describe('uploading files to Sentry release', () => {
 				bar: path.resolve(__dirname, 'fixtures/bar.js')
 			}
 		}))
-		.then(expectNoCompileError)
 		.then(() => fetchFiles(release))
 		.then(expectReleaseContainsFile('foo.bundle.js'))
 		.then(expectReleaseContainsFile('foo.bundle.js.map'))
@@ -120,7 +112,6 @@ describe('uploading files to Sentry release', () => {
 				bar: path.resolve(__dirname, 'fixtures/bar.js')
 			}
 		}))
-		.then(expectNoCompileError)
 		.then(() => fetchFiles(release))
 		.then(expectReleaseDoesNotContainFile('foo.bundle.js'))
 		.then(expectReleaseDoesNotContainFile('foo.bundle.js.map'))
