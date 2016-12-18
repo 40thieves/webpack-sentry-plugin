@@ -14,7 +14,7 @@ $ npm install webpack-sentry-plugin --save-dev
 Using yarn:
 
 ```
-$ yarn add webpack-sentry-plugin
+$ yarn add webpack-sentry-plugin --dev
 ```
 
 ### Usage
@@ -79,7 +79,7 @@ var config = {
 - `organisation`: Sentry organisation to upload files to
 - `project`: Sentry project to upload files to
 - `apiKey`: Sentry api keys. See [Sentry docs](https://docs.sentry.io/clients/javascript/sourcemaps/#uploading-source-maps-to-sentry) for info on how to create one
-- `release`: Release name to attach source maps to. Can be string or function
+- `release`: Release name to attach source maps to. Can be string or function that returns a string
 
 ### Thanks
 
