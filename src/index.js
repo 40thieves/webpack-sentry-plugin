@@ -4,7 +4,7 @@ import fs from 'fs'
 
 const BASE_SENTRY_URL = `https://sentry.io/api/0/projects`
 
-export default class SentryPlugin {
+module.exports = class SentryPlugin {
 	constructor(options) {
 		this.organisationSlug = options.organisation
 		this.projectSlug = options.project
