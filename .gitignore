@@ -1,2 +1,4 @@
 .env
-.tmp
+
+.tmp/
+dist/
