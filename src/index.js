@@ -20,6 +20,12 @@ export default class SentryPlugin {
 
 	apply(compiler) {
 		compiler.plugin('after-emit', (compilation, cb) => {
+			const errors = this.ensureRequiredOptions()
+
+			if (errors) {
+				return this.handleErrors(errors, compilation, cb)
+			}
+
 			const files = this.getFiles(compilation)
 
 			this.createRelease()
@@ -27,6 +33,17 @@ export default class SentryPlugin {
 				.then(() => cb())
 				.catch((err) => this.handleErrors(err, compilation, cb))
 		})
+	}
+
+	ensureRequiredOptions() {
+		if (!this.organisationSlug)
+			return new Error('Must provide organisation')
+		else if (!this.projectSlug)
+			return new Error(('Must provide project'))
+		else if (!this.apiKey)
+			return new Error('Must provide api key')
+		else
+			return null
 	}
 
 	getFiles(compilation) {

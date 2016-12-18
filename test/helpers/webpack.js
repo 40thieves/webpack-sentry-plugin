@@ -28,11 +28,11 @@ export function createWebpackConfig(sentryConfig, webpackConfig) {
 }
 
 function configureSentryPlugin(config) {
-	const options = Object.assign({}, config, {
+	const options = Object.assign({}, {
 		organisation: SENTRY_ORGANISATION,
 		project: SENTRY_PROJECT,
 		apiKey: SENTRY_API_KEY
-	})
+	}, config)
 
 	return new SentryWebpackPlugin(options)
 }
