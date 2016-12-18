@@ -1,7 +1,13 @@
 {
   "name": "webpack-sentry-plugin",
   "version": "0.0.1",
-  "description": "Webpack Sentry plugin",
+  "description": "Webpack plugin to upload source maps to Sentry",
+  "keywords": [
+    "sentry",
+    "webpack",
+    "upload",
+    "source-map"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "build": "webpack",
@@ -9,6 +15,14 @@
   },
   "author": "Alasdair Smith <ali@alasdairsmith.co.uk>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:40thieves/webpack-sentry-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/40thieves/webpack-sentry-plugin/issues"
+  },
+  "homepage": "https://github.com/40thieves/webpack-sentry-plugin",
   "dependencies": {
     "lodash": "^4.17.2",
     "request": "^2.79.0",
