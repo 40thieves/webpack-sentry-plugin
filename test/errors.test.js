@@ -4,7 +4,9 @@ it('adds error if Sentry organisation slug is missing', () => {
   return runWebpack(createWebpackConfig({ organisation: null }))
 		.catch(({ errors }) => {
 			expect(errors).toHaveLength(1)
-			expect(errors[0]).toEqual('Sentry Plugin: Error: Must provide organisation')
+			expect(errors[0]).toEqual(
+				'Sentry Plugin: Error: Must provide organisation'
+			)
 		})
 })
 
@@ -21,6 +23,16 @@ it('adds error if Sentry api key is missing', () => {
 		.catch(({ errors }) => {
   		expect(errors).toHaveLength(1)
 			expect(errors[0]).toEqual('Sentry Plugin: Error: Must provide api key')
+		})
+})
+
+it('adds error if release version is missing', () => {
+  return runWebpack(createWebpackConfig())
+		.catch(({ errors }) => {
+  		expect(errors).toHaveLength(1)
+			expect(errors[0]).toEqual(
+				'Sentry Plugin: Error: Must provide release version'
+			)
 		})
 })
 

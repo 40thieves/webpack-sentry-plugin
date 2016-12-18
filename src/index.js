@@ -42,6 +42,8 @@ export default class SentryPlugin {
 			return new Error(('Must provide project'))
 		else if (!this.apiKey)
 			return new Error('Must provide api key')
+		else if (!this.releaseVersion)
+			return new Error('Must provide release version')
 		else
 			return null
 	}
