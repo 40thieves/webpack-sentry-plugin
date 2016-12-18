@@ -2,8 +2,6 @@
 
 A webpack plugin to upload source maps to [Sentry](https://sentry.io/).
 
-⚠ WIP ⚠
-
 ### Installation
 
 
@@ -87,3 +85,14 @@ var config = {
 
 - Thanks to [@MikaAK](https://github.com/MikaAK) for creating [s3-webpack-plugin](https://github.com/MikaAK/s3-plugin-webpack), which inspired much of this project
 - Thanks for [@danharper](https://github.com/danharper) for creating the original build script implementation
+
+### Contributing
+
+Contributions are welcome 😄. To run the tests, please ensure you have the relevant environment variables set up. You can `cp .env.example .env` and fill it in.
+
+#### Commands to be aware of
+
+*Warning*: The test suite will create releases & upload files. They should be cleaned up afterward, but ensure that you are not overwriting something important!
+
+- `npm test`: Runs the test suite
+- `npm run build`: Compiles distribution build
