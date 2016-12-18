@@ -13,7 +13,7 @@
     "build": "babel src --out-dir dist",
     "prepublish": "npm test && npm run build",
     "test": "jest",
-    "lint": "eslint src; exit 0"
+    "lint": "eslint src test; exit 0"
   },
   "author": "Alasdair Smith <ali@alasdairsmith.co.uk>",
   "license": "MIT",

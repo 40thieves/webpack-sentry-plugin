@@ -2,7 +2,7 @@
 	"extends": "airbnb/base",
 	"rules": {
 		"indent": ["error", "tab"],
-    "no-tabs": 0,
+		"no-tabs": 0,
 		"semi": [2, "never"],
 		"no-var": 0,
 		"vars-on-top": 0,
@@ -14,9 +14,20 @@
 		"comma-dangle": 0,
 		"object-curly-spacing": 0,
 		"max-nested-callbacks": [2, 5],
-    "arrow-parens": ["error", "always"]
+		"arrow-parens": ["error", "always"],
+		"arrow-body-style": 0
 	},
 	"env": {
 		"node": true
+	},
+	"globals": {
+    "jest": false,
+		"describe": false,
+		"it": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "beforeAll": false,
+    "afterAll": false,
+		"expect": false
 	}
 }
