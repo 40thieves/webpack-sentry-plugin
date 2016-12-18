@@ -3,35 +3,15 @@ import path from 'path'
 
 import { cleanUpRelease, fetchRelease, fetchFiles } from './sentry-helpers'
 import { createWebpackConfig, runWebpack, OUTPUT_PATH } from './webpack-helpers'
+import {
+	expectNoFailure,
+	expectReleaseContainsFile,
+	expectReleaseDoesNotContainFile
+} from './assertion-helpers'
 
 function ensureOutputPath() {
 	if (!fs.existsSync(OUTPUT_PATH)) {
 		fs.mkdirSync(OUTPUT_PATH)
-	}
-}
-
-// Work around Jest not having expect.fail()
-function expectNoFailure(msg) {
-	return () => {
-		throw new Error(msg)
-	}
-}
-
-function expectReleaseContainsFile(filename) {
-	return (files) => {
-		const filenames = files.map(({ name }) => name)
-		expect(filenames).toContain(filename)
-
-		return Promise.resolve(files)
-	}
-}
-
-function expectReleaseDoesNotContainFile(filename) {
-	return (files) => {
-		const filenames = files.map(({ name }) => name)
-		expect(filenames).not.toContain(filename)
-
-		return Promise.resolve(files)
 	}
 }
 
