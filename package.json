@@ -11,6 +11,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
+    "prepublish": "npm test && npm run build",
     "test": "jest"
   },
   "author": "Alasdair Smith <ali@alasdairsmith.co.uk>",
