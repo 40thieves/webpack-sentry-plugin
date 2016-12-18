@@ -12,7 +12,8 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "prepublish": "npm test && npm run build",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint src; exit 0"
   },
   "author": "Alasdair Smith <ali@alasdairsmith.co.uk>",
   "license": "MIT",
@@ -35,6 +36,9 @@
     "babel-polyfill": "^6.20.0",
     "babel-preset-es2015": "^6.18.0",
     "dotenv": "^2.0.0",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
     "jest": "^17.0.3",
     "webpack": "^1.14.0"
   },
