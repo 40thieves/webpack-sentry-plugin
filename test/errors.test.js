@@ -1,7 +1,7 @@
 import { createWebpackConfig, runWebpack } from './helpers/webpack'
 
 it('adds error if Sentry organisation slug is missing', () => {
-  return runWebpack(createWebpackConfig({ organisation: null }))
+	return runWebpack(createWebpackConfig({ organisation: null }))
 		.catch(({ errors }) => {
 			expect(errors).toHaveLength(1)
 			expect(errors[0]).toEqual(
@@ -11,25 +11,25 @@ it('adds error if Sentry organisation slug is missing', () => {
 })
 
 it('adds error if Sentry project name is missing', () => {
-  return runWebpack(createWebpackConfig({ project: null }))
+	return runWebpack(createWebpackConfig({ project: null }))
 		.catch(({ errors }) => {
-  		expect(errors).toHaveLength(1)
+			expect(errors).toHaveLength(1)
 			expect(errors[0]).toEqual('Sentry Plugin: Error: Must provide project')
 		})
 })
 
 it('adds error if Sentry api key is missing', () => {
-  return runWebpack(createWebpackConfig({ apiKey: null }))
+	return runWebpack(createWebpackConfig({ apiKey: null }))
 		.catch(({ errors }) => {
-  		expect(errors).toHaveLength(1)
+			expect(errors).toHaveLength(1)
 			expect(errors[0]).toEqual('Sentry Plugin: Error: Must provide api key')
 		})
 })
 
 it('adds error if release version is missing', () => {
-  return runWebpack(createWebpackConfig())
+	return runWebpack(createWebpackConfig())
 		.catch(({ errors }) => {
-  		expect(errors).toHaveLength(1)
+			expect(errors).toHaveLength(1)
 			expect(errors[0]).toEqual(
 				'Sentry Plugin: Error: Must provide release version'
 			)

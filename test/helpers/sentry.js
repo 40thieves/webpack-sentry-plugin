@@ -21,6 +21,7 @@ export function cleanUpRelease(releaseVersion) {
 			}
 		})
 		.catch((err) => {
+			// eslint-disable-next-line no-console
 			console.error(`ERROR CLEANING UP RELEASE!
 Release version: ${releaseVersion}
 Status: ${err.statusCode}

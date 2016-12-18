@@ -40,10 +40,12 @@ function configureSentryPlugin(config) {
 export function runWebpack(config) {
 	return new Promise((resolve, reject) => {
 		webpack(config, (err, stats) => {
-			if (stats.toJson().errors.length)
+			if (stats.toJson().errors.length) {
 				reject({ errors: stats.toJson().errors })
-			else
+			}
+			else {
 				resolve({ config, stats })
+			}
 		})
 	})
 }

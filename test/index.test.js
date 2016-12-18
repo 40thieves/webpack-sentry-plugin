@@ -34,7 +34,7 @@ describe('creating Sentry release', () => {
 	})
 
 	it('with version from function', () => {
-	  const release = 'function-release'
+		const release = 'function-release'
 
 		return runWebpack(createWebpackConfig({
 			release: () => release

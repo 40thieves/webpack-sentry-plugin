@@ -2,7 +2,12 @@ import _ from 'lodash'
 import request from 'request-promise'
 import fs from 'fs'
 
-const BASE_SENTRY_URL = `https://sentry.io/api/0/projects`
+const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
+
+function handleErrors(err, compilation, cb) {
+	compilation.errors.push(`Sentry Plugin: ${err}`)
+	cb()
+}
 
 module.exports = class SentryPlugin {
 	constructor(options) {
@@ -23,29 +28,34 @@ module.exports = class SentryPlugin {
 			const errors = this.ensureRequiredOptions()
 
 			if (errors) {
-				return this.handleErrors(errors, compilation, cb)
+				return handleErrors(errors, compilation, cb)
 			}
 
 			const files = this.getFiles(compilation)
 
-			this.createRelease()
+			return this.createRelease()
 				.then(() => this.uploadFiles(files))
 				.then(() => cb())
-				.catch((err) => this.handleErrors(err, compilation, cb))
+				.catch((err) => handleErrors(err, compilation, cb))
 		})
 	}
 
 	ensureRequiredOptions() {
-		if (!this.organisationSlug)
+		if (!this.organisationSlug) {
 			return new Error('Must provide organisation')
-		else if (!this.projectSlug)
+		}
+		else if (!this.projectSlug) {
 			return new Error(('Must provide project'))
-		else if (!this.apiKey)
+		}
+		else if (!this.apiKey) {
 			return new Error('Must provide api key')
-		else if (!this.releaseVersion)
+		}
+		else if (!this.releaseVersion) {
 			return new Error('Must provide release version')
-		else
+		}
+		else {
 			return null
+		}
 	}
 
 	getFiles(compilation) {
@@ -97,10 +107,5 @@ module.exports = class SentryPlugin {
 
 	sentryReleaseUrl() {
 		return `${BASE_SENTRY_URL}/${this.organisationSlug}/${this.projectSlug}/releases`
-	}
-
-	handleErrors(err, compilation, cb) {
-		compilation.errors.push(`Sentry Plugin: ${err}`)
-		cb()
 	}
 }

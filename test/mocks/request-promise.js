@@ -8,6 +8,7 @@ const responses = {
 	}
 }
 
+/* eslint-disable consistent-return */
 function mockRequestPromise({ url, body }) {
 	// Creating new release
 	if (/releases\/$/.test(url)) {
@@ -23,6 +24,7 @@ function mockRequestPromise({ url, body }) {
 		}
 	}
 }
+/* eslint-enable consistent-return */
 
 export default jest
 	.genMockFromModule('request-promise')
