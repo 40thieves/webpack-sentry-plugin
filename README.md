@@ -6,7 +6,18 @@ A webpack plugin to upload source maps to [Sentry](https://sentry.io/).
 
 ### Installation
 
-Coming soon!
+
+Using npm:
+
+```
+$ npm install webpack-sentry-plugin --save-dev
+```
+
+Using yarn:
+
+```
+$ yarn add webpack-sentry-plugin
+```
 
 ### Usage
 
