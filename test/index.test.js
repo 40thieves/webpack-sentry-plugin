@@ -1,13 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 
-import { cleanUpRelease, fetchRelease, fetchFiles } from './sentry-helpers'
-import { createWebpackConfig, runWebpack, OUTPUT_PATH } from './webpack-helpers'
+import { cleanUpRelease, fetchRelease, fetchFiles } from './helpers/sentry'
+import { createWebpackConfig, runWebpack, OUTPUT_PATH } from './helpers/webpack'
 import {
 	expectNoFailure,
 	expectReleaseContainsFile,
 	expectReleaseDoesNotContainFile
-} from './assertion-helpers'
+} from './helpers/assertion'
 
 function ensureOutputPath() {
 	if (!fs.existsSync(OUTPUT_PATH)) {

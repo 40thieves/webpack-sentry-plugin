@@ -1,21 +1,21 @@
 import path from 'path'
 import webpack from 'webpack'
 
-import SentryWebpackPlugin from '../src/index'
-
-export const OUTPUT_PATH = path.resolve(__dirname, '../.tmp')
+import SentryWebpackPlugin from '../../src/index'
 
 import {
 	SENTRY_API_KEY,
 	SENTRY_ORGANISATION,
 	SENTRY_PROJECT
-} from './sentry-helpers'
+} from './sentry'
+
+export const OUTPUT_PATH = path.resolve(__dirname, '../../.tmp')
 
 export function createWebpackConfig(sentryConfig, webpackConfig) {
 	return Object.assign({}, {
 		devtool: 'source-map',
 		entry: {
-			index: path.resolve(__dirname, 'fixtures/index.js')
+			index: path.resolve(__dirname, '../fixtures/index.js')
 		},
 		output: {
 			path: OUTPUT_PATH,

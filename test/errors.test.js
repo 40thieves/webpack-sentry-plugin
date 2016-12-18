@@ -1,4 +1,4 @@
-import { createWebpackConfig, runWebpack } from './webpack-helpers'
+import { createWebpackConfig, runWebpack } from './helpers/webpack'
 
 it('adds release error to compilation', () => {
 	return runWebpack(createWebpackConfig({ release: 'bad-release' }))
