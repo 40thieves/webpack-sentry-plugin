@@ -21,15 +21,15 @@ $ yarn add webpack-sentry-plugin --dev
 
 1. Require `webpack-sentry-plugin`:
 
-    ```js
+   ```js
     var SentryPlugin = require('webpack-sentry-plugin');
-    ```
+   ```
 
 2. Configure webpack to output source maps. Recommended reading: [webpack docs](https://webpack.js.org/configuration/devtool/), [Sentry docs](https://docs.sentry.io/clients/javascript/sourcemaps)
 
 3. Add to webpack config:
 
-    ```js
+   ```js
     var config = {
       plugins: [
         new SentryPlugin({
@@ -45,7 +45,7 @@ $ yarn add webpack-sentry-plugin --dev
         })
       ]
     }
-    ```
+   ```
 
 #### Options
 
@@ -76,15 +76,32 @@ var config = {
   ]
 }
 ```
+- `filenameTransform`: Function to transform filename before uploading to Sentry
+
+  ```js
+  var config = {
+    plugins: [
+      new SentryPlugin({
+        filenameTransform: function(filename) {
+          return `a-filename-prefix-${filename}`
+        }
+      })
+    ]
+  }
+  ```
+
 - `organisation`: Sentry organisation to upload files to
+
 - `project`: Sentry project to upload files to
+
 - `apiKey`: Sentry api keys. See [Sentry docs](https://docs.sentry.io/clients/javascript/sourcemaps/#uploading-source-maps-to-sentry) for info on how to create one
+
 - `release`: Release name to attach source maps to. Can be string or function that returns a string
 
 ### Thanks
 
 - Thanks to [@MikaAK](https://github.com/MikaAK) for creating [s3-webpack-plugin](https://github.com/MikaAK/s3-plugin-webpack), which inspired much of this project
-- Thanks for [@danharper](https://github.com/danharper) for creating the original build script implementation
+- Thanks to [@danharper](https://github.com/danharper) for creating the original build script implementation
 
 ### Contributing
 
