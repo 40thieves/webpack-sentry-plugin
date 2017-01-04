@@ -43,6 +43,9 @@ export function runWebpack(config) {
 			if (stats.toJson().errors.length) {
 				reject({ errors: stats.toJson().errors })
 			}
+			if (stats.toJson().warnings.length) {
+				reject({ warnings: stats.toJson().warnings })
+			}
 			else {
 				resolve({ config, stats })
 			}
