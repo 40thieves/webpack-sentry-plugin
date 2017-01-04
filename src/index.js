@@ -4,6 +4,8 @@ import fs from 'fs'
 
 const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
 
+const DEFAULT_TRANSFORM = (filename) => filename
+
 function handleErrors(err, compilation, cb) {
 	compilation.errors.push(`Sentry Plugin: ${err}`)
 	cb()
@@ -21,6 +23,8 @@ module.exports = class SentryPlugin {
 
 		this.include = options.include
 		this.exclude = options.exclude
+
+		this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
 	}
 
 	apply(compiler) {
@@ -100,7 +104,7 @@ module.exports = class SentryPlugin {
 			},
 			formData: {
 				file: fs.createReadStream(path),
-				name
+				name: this.filenameTransform(name)
 			}
 		})
 	}

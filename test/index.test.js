@@ -60,7 +60,7 @@ describe('uploading files to Sentry release', () => {
 	it('filters files based on include', () => {
 		return runWebpack(createWebpackConfig({
 			release,
-			include: /foo.bundle.js/
+			include: /foo\.bundle\.js/
 		}, {
 			entry: {
 				foo: path.resolve(__dirname, 'fixtures/foo.js'),
@@ -77,7 +77,7 @@ describe('uploading files to Sentry release', () => {
 	it('filters files based on exclude', () => {
 		return runWebpack(createWebpackConfig({
 			release,
-			exclude: /foo.bundle.js/
+			exclude: /foo\.bundle\.js/
 		}, {
 			entry: {
 				foo: path.resolve(__dirname, 'fixtures/foo.js'),
@@ -88,4 +88,17 @@ describe('uploading files to Sentry release', () => {
 		.then(expectReleaseDoesNotContainFile('foo.bundle.js'))
 		.then(expectReleaseDoesNotContainFile('foo.bundle.js.map'))
 	})
+
+	it('transforms filename', () => {
+		return runWebpack(createWebpackConfig({
+			release,
+			include: /index\.bundle\.js\.map/,
+			filenameTransform: (filename) => {
+				return `a-filename-prefix-${filename}`
+			}
+		}))
+		.then(() => fetchFiles(release))
+		.then(expectReleaseContainsFile('a-filename-prefix-index.bundle.js.map'))
+	})
 })
+
