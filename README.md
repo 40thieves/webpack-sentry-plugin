@@ -22,7 +22,7 @@ $ yarn add webpack-sentry-plugin --dev
 1. Require `webpack-sentry-plugin`:
 
    ```js
-    var SentryPlugin = require('webpack-sentry-plugin');
+   var SentryPlugin = require('webpack-sentry-plugin');
    ```
 
 2. Configure webpack to output source maps. Recommended reading: [webpack docs](https://webpack.js.org/configuration/devtool/), [Sentry docs](https://docs.sentry.io/clients/javascript/sourcemaps)
@@ -30,21 +30,21 @@ $ yarn add webpack-sentry-plugin --dev
 3. Add to webpack config:
 
    ```js
-    var config = {
-      plugins: [
-        new SentryPlugin({
-          // Sentry options are required
-          organisation: 'your-organisation-name',
-          project: 'your-project-name',
-          apiKey: process.env.SENTRY_API_KEY,
-
-          // Release version name/hash is required
-          release: function() {
-            return process.env.GIT_SHA
-          }
-        })
-      ]
-    }
+   var config = {
+     plugins: [
+       new SentryPlugin({
+         // Sentry options are required
+         organisation: 'your-organisation-name',
+         project: 'your-project-name',
+         apiKey: process.env.SENTRY_API_KEY,
+         
+         // Release version name/hash is required
+         release: function() {
+           return process.env.GIT_SHA
+         }
+       })
+     ]
+   }
    ```
 
 #### Options
@@ -52,31 +52,31 @@ $ yarn add webpack-sentry-plugin --dev
 - `exclude`: RegExp to match for excluded files
 - `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
 
-```js
-var config = {
-  plugins: [
-    new SentryPlugin({
-      // Exclude uploading of html
-      exclude: /\.html$/,
-      ...
-    })
-  ]
-}
-```
+  ```js
+  var config = {
+    plugins: [
+      new SentryPlugin({
+        // Exclude uploading of html
+        exclude: /\.html$/,
+        ...
+      })
+    ]
+  }
+  ```
 
 - `include`: RegExp to match for included files
 
-```js
-var config = {
-  plugins: [
-    new SentryPlugin({
-      // Only upload foo.js & foo.js.map
-      include: /foo.js/,
-      ...
-    })
-  ]
-}
-```
+  ```js
+  var config = {
+    plugins: [
+      new SentryPlugin({
+        // Only upload foo.js & foo.js.map
+        include: /foo.js/,
+        ...
+      })
+    ]
+  }
+  ```
 - `filenameTransform`: Function to transform filename before uploading to Sentry
 
   ```js
@@ -84,7 +84,7 @@ var config = {
     plugins: [
       new SentryPlugin({
         filenameTransform: function(filename) {
-          return `a-filename-prefix-${filename}`
+          return 'a-filename-prefix-' + filename
         }
       })
     ]
