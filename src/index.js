@@ -42,8 +42,13 @@ module.exports = class SentryPlugin {
 
 	handleErrors(err, compilation, cb) {
 		const errorMsg = `Sentry Plugin: ${err}`
-		if (this.suppressErrors) compilation.warnings.push(errorMsg)
-		else compilation.errors.push(errorMsg)
+		if (this.suppressErrors) {
+			compilation.warnings.push(errorMsg)
+		}
+		else {
+			compilation.errors.push(errorMsg)
+		}
+
 		cb()
 	}
 
