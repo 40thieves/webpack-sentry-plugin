@@ -6,11 +6,6 @@ const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
 
 const DEFAULT_TRANSFORM = (filename) => filename
 
-function handleErrors(err, compilation, cb) {
-	compilation.errors.push(`Sentry Plugin: ${err}`)
-	cb()
-}
-
 module.exports = class SentryPlugin {
 	constructor(options) {
 		this.organisationSlug = options.organisation
@@ -25,6 +20,7 @@ module.exports = class SentryPlugin {
 		this.exclude = options.exclude
 
 		this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
+		this.suppressErrors = options.suppressErrors
 	}
 
 	apply(compiler) {
@@ -32,7 +28,7 @@ module.exports = class SentryPlugin {
 			const errors = this.ensureRequiredOptions()
 
 			if (errors) {
-				return handleErrors(errors, compilation, cb)
+				return this.handleErrors(errors, compilation, cb)
 			}
 
 			const files = this.getFiles(compilation)
@@ -40,8 +36,15 @@ module.exports = class SentryPlugin {
 			return this.createRelease()
 				.then(() => this.uploadFiles(files))
 				.then(() => cb())
-				.catch((err) => handleErrors(err, compilation, cb))
+				.catch((err) => this.handleErrors(err, compilation, cb))
 		})
+	}
+
+	handleErrors(err, compilation, cb) {
+		const errorMsg = `Sentry Plugin: ${err}`
+		if (this.suppressErrors) compilation.warnings.push(errorMsg)
+		else compilation.errors.push(errorMsg)
+		cb()
 	}
 
 	ensureRequiredOptions() {

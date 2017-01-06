@@ -37,7 +37,7 @@ $ yarn add webpack-sentry-plugin --dev
           organisation: 'your-organisation-name',
           project: 'your-project-name',
           apiKey: process.env.SENTRY_API_KEY,
-          
+
           // Release version name/hash is required
           release: function() {
             return process.env.GIT_SHA
@@ -50,6 +50,7 @@ $ yarn add webpack-sentry-plugin --dev
 #### Options
 
 - `exclude`: RegExp to match for excluded files
+- `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
 
 ```js
 var config = {
