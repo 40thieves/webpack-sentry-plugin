@@ -50,19 +50,6 @@ $ yarn add webpack-sentry-plugin --dev
 #### Options
 
 - `exclude`: RegExp to match for excluded files
-- `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
-
-  ```js
-  var config = {
-    plugins: [
-      new SentryPlugin({
-        // Exclude uploading of html
-        exclude: /\.html$/,
-        ...
-      })
-    ]
-  }
-  ```
 
 - `include`: RegExp to match for included files
 
@@ -77,6 +64,7 @@ $ yarn add webpack-sentry-plugin --dev
     ]
   }
   ```
+
 - `filenameTransform`: Function to transform filename before uploading to Sentry
 
   ```js
@@ -86,6 +74,20 @@ $ yarn add webpack-sentry-plugin --dev
         filenameTransform: function(filename) {
           return 'a-filename-prefix-' + filename
         }
+      })
+    ]
+  }
+  ```
+
+- `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
+
+  ```js
+  var config = {
+    plugins: [
+      new SentryPlugin({
+        // Exclude uploading of html
+        exclude: /\.html$/,
+        ...
       })
     ]
   }
