@@ -18,16 +18,7 @@
 		"arrow-body-style": 0
 	},
 	"env": {
-		"node": true
-	},
-	"globals": {
-    "jest": false,
-		"describe": false,
-		"it": false,
-    "beforeEach": false,
-    "afterEach": false,
-    "beforeAll": false,
-    "afterAll": false,
-		"expect": false
+		"node": true,
+		"jest": true
 	}
 }
