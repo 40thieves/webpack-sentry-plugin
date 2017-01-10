@@ -36,7 +36,7 @@ $ yarn add webpack-sentry-plugin --dev
          // Sentry options are required
          organisation: 'your-organisation-name',
          project: 'your-project-name',
-         apiKey: process.env.SENTRY_API_KEY,
+         apiKey: process.env.SENTRY_API_KEY, // proper place to generate your api key https://sentry.io/api/
          
          // Release version name/hash is required
          release: function() {
