@@ -97,7 +97,7 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `project`: Sentry project to upload files to
 
-- `apiKey`: Sentry api keys. See [Sentry docs](https://docs.sentry.io/clients/javascript/sourcemaps/#uploading-source-maps-to-sentry) for info on how to create one
+- `apiKey`: Sentry api key ([Generate one here](https://sentry.io/api/))
 
 - `release`: Release name to attach source maps to. Can be string or function that returns a string
 
