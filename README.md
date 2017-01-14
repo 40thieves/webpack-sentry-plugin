@@ -93,6 +93,8 @@ $ yarn add webpack-sentry-plugin --dev
   }
   ```
 
+- `baseSentryURL`: URL of Sentry instance. Shouldn't need to set if using sentry.io, but useful if self hosting
+
 - `organisation`: Sentry organisation to upload files to
 
 - `project`: Sentry project to upload files to
