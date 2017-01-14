@@ -8,6 +8,7 @@ const DEFAULT_TRANSFORM = (filename) => filename
 
 module.exports = class SentryPlugin {
 	constructor(options) {
+		this.baseSentryURL = options.baseSentryURL || BASE_SENTRY_URL
 		this.organisationSlug = options.organisation
 		this.projectSlug = options.project
 		this.apiKey = options.apiKey
@@ -118,6 +119,6 @@ module.exports = class SentryPlugin {
 	}
 
 	sentryReleaseUrl() {
-		return `${BASE_SENTRY_URL}/${this.organisationSlug}/${this.projectSlug}/releases`
+		return `${this.baseSentryURL}/${this.organisationSlug}/${this.projectSlug}/releases`
 	}
 }
