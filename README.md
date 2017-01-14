@@ -51,6 +51,18 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `exclude`: RegExp to match for excluded files
 
+  ```js
+  var config = {
+    plugins: [
+      new SentryPlugin({
+        // Exclude uploading of html
+        exclude: /\.html$/,
+        ...
+      })
+    ]
+  }
+  ```
+
 - `include`: RegExp to match for included files
 
   ```js
@@ -80,18 +92,6 @@ $ yarn add webpack-sentry-plugin --dev
   ```
 
 - `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
-
-  ```js
-  var config = {
-    plugins: [
-      new SentryPlugin({
-        // Exclude uploading of html
-        exclude: /\.html$/,
-        ...
-      })
-    ]
-  }
-  ```
 
 - `baseSentryURL`: URL of Sentry instance. Shouldn't need to set if using sentry.io, but useful if self hosting
 
