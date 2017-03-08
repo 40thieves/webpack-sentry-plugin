@@ -17,7 +17,7 @@ module.exports = class SentryPlugin {
 			? options.release()
 			: options.release
 
-		this.include = options.include
+		this.include = options.include || /\.js$|\.map$/
 		this.exclude = options.exclude
 
 		this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
