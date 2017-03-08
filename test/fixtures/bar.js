@@ -1,1 +1,1 @@
-console.log('Hello from bar.js')
+console.log('Hello from bar.js');
