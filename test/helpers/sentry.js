@@ -1,7 +1,9 @@
 import request from 'request-promise'
 import dotenv from 'dotenv'
 
-dotenv.load()
+// Silence logs if .env file is missing (configured through environment
+// variables instead)
+dotenv.load({ silent: true })
 
 export const {
 	SENTRY_API_KEY,
