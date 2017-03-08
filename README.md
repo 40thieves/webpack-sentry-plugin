@@ -112,11 +112,11 @@ $ yarn add webpack-sentry-plugin --dev
 
 ### Contributing
 
-Contributions are welcome 😄. To run the tests, please ensure you have the relevant environment variables set up. You can `cp .env.example .env` and fill it in.
+Contributions are welcome 😄. To run the tests, please ensure you have the relevant environment variables set up. You can `cp .env.example .env` and fill it in with test account credentials. An API key can be created [here](https://sentry.io/api/), assuming you are signed in.
 
 #### Commands to be aware of
 
-*Warning*: The test suite will create releases & upload files. They should be cleaned up afterward, but ensure that you are not overwriting something important!
+*Warning* ⚠️: The test suite will create releases & upload files. They should be cleaned up afterward, but ensure that you are not overwriting something important!
 
 - `npm test`: Runs the test suite
 - `npm run build`: Compiles distribution build
