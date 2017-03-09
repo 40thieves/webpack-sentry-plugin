@@ -79,7 +79,7 @@ $ yarn add webpack-sentry-plugin --dev
   }
   ```
 
-- `filenameTransform`: Function to transform filename before uploading to Sentry
+- `filenameTransform`: Function to transform filename before uploading to Sentry. Defaults to prefixing filename with `~/`, which is used by Sentry as a [host wildcard](https://docs.sentry.io/clients/javascript/sourcemaps/#assets-multiple-origins)
 
   ```js
   var config = {

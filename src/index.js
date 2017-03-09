@@ -4,7 +4,7 @@ import fs from 'fs'
 
 const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
 
-const DEFAULT_TRANSFORM = (filename) => filename
+const DEFAULT_TRANSFORM = (filename) => `~/${filename}`
 
 module.exports = class SentryPlugin {
 	constructor(options) {
