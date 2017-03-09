@@ -13,7 +13,7 @@ module.exports = class SentryPlugin {
 		this.projectSlug = options.project
 		this.apiKey = options.apiKey
 
-		this.releaseVersion = options.releaseVersion;
+		this.releaseVersion = options.release;
 
 		this.include = options.include
 		this.exclude = options.exclude
@@ -32,9 +32,9 @@ module.exports = class SentryPlugin {
 
 			const files = this.getFiles(compilation)
 
-	      	this.releaseVersion = _.isFunction(this.releaseVersion)
-	          ? this.releaseVersion(compilation.hash)
-	          : this.releaseVersion;
+			if (_.isFunction(this.releaseVersion)) {
+				this.releaseVersion(compilation.hash)
+			}
 
 			return this.createRelease()
 				.then(() => this.uploadFiles(files))
