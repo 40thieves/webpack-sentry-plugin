@@ -103,7 +103,7 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `apiKey`: Sentry api key ([Generate one here](https://sentry.io/api/))
 
-- `release`: Release name to attach source maps to. Can be string or function that returns a string
+- `release`: Release name to attach source maps to. Can be string or function that returns a string. If a function is passed, it will receive the build hash as an argument
 
 ### Thanks
 
