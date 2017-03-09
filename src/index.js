@@ -33,7 +33,7 @@ module.exports = class SentryPlugin {
 			const files = this.getFiles(compilation)
 
 			if (_.isFunction(this.releaseVersion)) {
-				this.releaseVersion(compilation.hash)
+				this.releaseVersion = this.releaseVersion(compilation.hash)
 			}
 
 			return this.createRelease()
