@@ -93,6 +93,20 @@ $ yarn add webpack-sentry-plugin --dev
   }
   ```
 
+- `release`: Release name to attach source maps to. Can be string or function that returns a string. If a function is passed, it will receive the build hash as an argument
+
+```js
+var config = {
+  plugins: [
+    new SentryPlugin({
+      release: function(hash) {
+        return hash
+      }
+    })
+  ]
+}
+```
+
 - `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
 
 - `baseSentryURL`: URL of Sentry instance. Shouldn't need to set if using sentry.io, but useful if self hosting
@@ -103,7 +117,6 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `apiKey`: Sentry api key ([Generate one here](https://sentry.io/api/))
 
-- `release`: Release name to attach source maps to. Can be string or function that returns a string. If a function is passed, it will receive the build hash as an argument
 
 ### Thanks
 
