@@ -1,9 +1,9 @@
-const foo = 'bar'
+const foo = 'bar';
 
-let baz = (a) => {
-	return `Hello ${a}`
-}
+let baz = a => {
+  return `Hello ${a}`;
+};
 
-baz(foo)
+baz(foo);
 
-export default baz
+export default baz;

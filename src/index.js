@@ -72,9 +72,11 @@ module.exports = class SentryPlugin {
     return _.reduce(
       compilation.assets,
       (acc, asset, name) => {
-        return this.isIncludeOrExclude(name) ? acc.concat({ name, path: asset.existsAt }) : acc;
+        return this.isIncludeOrExclude(name)
+          ? acc.concat({ name, path: asset.existsAt })
+          : acc;
       },
-      [],
+      []
     );
   }
 

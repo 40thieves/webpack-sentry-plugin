@@ -21,7 +21,7 @@ export function createWebpackConfig(sentryConfig, webpackConfig) {
       },
       plugins: [configureSentryPlugin(sentryConfig)],
     },
-    webpackConfig,
+    webpackConfig
   );
 }
 
@@ -33,7 +33,7 @@ function configureSentryPlugin(config) {
       project: SENTRY_PROJECT,
       apiKey: SENTRY_API_KEY,
     },
-    config,
+    config
   );
 
   return new SentryWebpackPlugin(options);

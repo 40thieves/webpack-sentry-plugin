@@ -2,7 +2,11 @@ import fs from 'fs';
 import path from 'path';
 
 import { cleanUpRelease, fetchRelease, fetchFiles } from './helpers/sentry';
-import { createWebpackConfig, runWebpack, OUTPUT_PATH } from './helpers/webpack';
+import {
+  createWebpackConfig,
+  runWebpack,
+  OUTPUT_PATH,
+} from './helpers/webpack';
 import {
   expectNoFailure,
   expectReleaseContainsFile,
@@ -39,7 +43,7 @@ describe('creating Sentry release', () => {
     return runWebpack(
       createWebpackConfig({
         release: () => release,
-      }),
+      })
     )
       .then(() => fetchRelease(release))
       .then(({ version }) => expect(version).toEqual(release))
@@ -71,8 +75,8 @@ describe('uploading files to Sentry release', () => {
             foo: path.resolve(__dirname, 'fixtures/foo.js'),
             bar: path.resolve(__dirname, 'fixtures/bar.js'),
           },
-        },
-      ),
+        }
+      )
     )
       .then(() => fetchFiles(release))
       .then(expectReleaseContainsFile('~/foo.bundle.js'))
@@ -93,8 +97,8 @@ describe('uploading files to Sentry release', () => {
             foo: path.resolve(__dirname, 'fixtures/foo.js'),
             bar: path.resolve(__dirname, 'fixtures/bar.js'),
           },
-        },
-      ),
+        }
+      )
     )
       .then(() => fetchFiles(release))
       .then(expectReleaseDoesNotContainFile('foo.bundle.js'))
@@ -109,7 +113,7 @@ describe('uploading files to Sentry release', () => {
         filenameTransform: filename => {
           return `a-filename-prefix-${filename}`;
         },
-      }),
+      })
     )
       .then(() => fetchFiles(release))
       .then(expectReleaseContainsFile('a-filename-prefix-index.bundle.js.map'));

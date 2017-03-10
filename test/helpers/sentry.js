@@ -27,7 +27,7 @@ export function cleanUpRelease(releaseVersion) {
         `ERROR CLEANING UP RELEASE!
 Release version: ${releaseVersion}
 Status: ${err.statusCode}
-Error: ${err.error}`,
+Error: ${err.error}`
       );
     });
   };

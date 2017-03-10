@@ -25,4 +25,6 @@ function mockRequestPromise({ url, body }) {
 }
 /* eslint-enable consistent-return */
 
-export default jest.genMockFromModule('request-promise').mockImplementation(mockRequestPromise);
+export default jest
+  .genMockFromModule('request-promise')
+  .mockImplementation(mockRequestPromise);
