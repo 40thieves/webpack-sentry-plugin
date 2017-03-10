@@ -79,7 +79,7 @@ $ yarn add webpack-sentry-plugin --dev
   }
   ```
 
-- `filenameTransform`: Function to transform filename before uploading to Sentry
+- `filenameTransform`: Function to transform filename before uploading to Sentry. Defaults to prefixing filename with `~/`, which is used by Sentry as a [host wildcard](https://docs.sentry.io/clients/javascript/sourcemaps/#assets-multiple-origins)
 
   ```js
   var config = {
@@ -93,6 +93,20 @@ $ yarn add webpack-sentry-plugin --dev
   }
   ```
 
+- `release`: Release name to attach source maps to. Can be string or function that returns a string. If a function is passed, it will receive the build hash as an argument
+
+```js
+var config = {
+  plugins: [
+    new SentryPlugin({
+      release: function(hash) {
+        return hash
+      }
+    })
+  ]
+}
+```
+
 - `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
 
 - `baseSentryURL`: URL of Sentry instance. Shouldn't need to set if using sentry.io, but useful if self hosting
@@ -103,7 +117,6 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `apiKey`: Sentry api key ([Generate one here](https://sentry.io/api/))
 
-- `release`: Release name to attach source maps to. Can be string or function that returns a string
 
 ### Thanks
 
@@ -112,11 +125,11 @@ $ yarn add webpack-sentry-plugin --dev
 
 ### Contributing
 
-Contributions are welcome 😄. To run the tests, please ensure you have the relevant environment variables set up. You can `cp .env.example .env` and fill it in.
+Contributions are welcome 😄. To run the tests, please ensure you have the relevant environment variables set up. You can `cp .env.example .env` and fill it in with test account credentials. An API key can be created [here](https://sentry.io/api/), assuming you are signed in.
 
 #### Commands to be aware of
 
-*Warning*: The test suite will create releases & upload files. They should be cleaned up afterward, but ensure that you are not overwriting something important!
+*Warning* ⚠️: The test suite will create releases & upload files. They should be cleaned up afterward, but ensure that you are not overwriting something important!
 
 - `npm test`: Runs the test suite
 - `npm run build`: Compiles distribution build

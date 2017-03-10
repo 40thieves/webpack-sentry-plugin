@@ -55,8 +55,8 @@ describe('uploading files to Sentry release', () => {
   it('uploads source and matching source map', () => {
     return runWebpack(createWebpackConfig({ release }))
       .then(() => fetchFiles(release))
-      .then(expectReleaseContainsFile('index.bundle.js'))
-      .then(expectReleaseContainsFile('index.bundle.js.map'));
+      .then(expectReleaseContainsFile('~/index.bundle.js'))
+      .then(expectReleaseContainsFile('~/index.bundle.js.map'));
   });
 
   it('filters files based on include', () => {
@@ -75,10 +75,10 @@ describe('uploading files to Sentry release', () => {
       ),
     )
       .then(() => fetchFiles(release))
-      .then(expectReleaseContainsFile('foo.bundle.js'))
-      .then(expectReleaseContainsFile('foo.bundle.js.map'))
-      .then(expectReleaseDoesNotContainFile('bar.bundle.js'))
-      .then(expectReleaseDoesNotContainFile('bar.bundle.js.map'));
+      .then(expectReleaseContainsFile('~/foo.bundle.js'))
+      .then(expectReleaseContainsFile('~/foo.bundle.js.map'))
+      .then(expectReleaseDoesNotContainFile('~/bar.bundle.js'))
+      .then(expectReleaseDoesNotContainFile('~/bar.bundle.js.map'));
   });
 
   it('filters files based on exclude', () => {
