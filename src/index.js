@@ -4,7 +4,7 @@ import fs from 'fs'
 
 const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
 
-const DEFAULT_TRANSFORM = (filename) => filename
+const DEFAULT_TRANSFORM = (filename) => `~/${filename}`
 
 module.exports = class SentryPlugin {
 	constructor(options) {
@@ -13,11 +13,9 @@ module.exports = class SentryPlugin {
 		this.projectSlug = options.project
 		this.apiKey = options.apiKey
 
-		this.releaseVersion = _.isFunction(options.release)
-			? options.release()
-			: options.release
+		this.releaseVersion = options.release
 
-		this.include = options.include
+		this.include = options.include || /\.js$|\.map$/
 		this.exclude = options.exclude
 
 		this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
@@ -33,6 +31,10 @@ module.exports = class SentryPlugin {
 			}
 
 			const files = this.getFiles(compilation)
+
+			if (_.isFunction(this.releaseVersion)) {
+				this.releaseVersion = this.releaseVersion(compilation.hash)
+			}
 
 			return this.createRelease()
 				.then(() => this.uploadFiles(files))
