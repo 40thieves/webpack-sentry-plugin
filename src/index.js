@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import request from 'request-promise'
 import fs from 'fs'
 
@@ -32,7 +31,7 @@ module.exports = class SentryPlugin {
 
 			const files = this.getFiles(compilation)
 
-			if (_.isFunction(this.releaseVersion)) {
+			if (typeof this.releaseVersion === 'function') {
 				this.releaseVersion = this.releaseVersion(compilation.hash)
 			}
 
@@ -74,11 +73,12 @@ module.exports = class SentryPlugin {
 	}
 
 	getFiles(compilation) {
-		return _.reduce(compilation.assets, (acc, asset, name) => {
-			return this.isIncludeOrExclude(name)
-				? acc.concat({ name, path: asset.existsAt })
-				: acc
-		}, [])
+		return Object.keys(compilation.assets)
+			.map(name => {
+				if(this.isIncludeOrExclude(name)) return { name, path: compilation.assets[name].existsAt }
+				return null
+			})
+			.filter(i => i)
 	}
 
 	isIncludeOrExclude(filename) {
