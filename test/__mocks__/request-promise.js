@@ -23,6 +23,7 @@ function mockRequestPromise({ url, body }) {
 			return responses.upload[version]()
 		}
 	}
+	return Promise.reject(new Error("Mock: Unknown"));
 }
 /* eslint-enable consistent-return */
 
