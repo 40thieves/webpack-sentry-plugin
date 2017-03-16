@@ -3,124 +3,126 @@ import fs from 'fs'
 
 const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
 
-const DEFAULT_TRANSFORM = (filename) => `~/${filename}`
+const DEFAULT_TRANSFORM = filename => `~/${filename}`
 
 module.exports = class SentryPlugin {
-	constructor(options) {
-		this.baseSentryURL = options.baseSentryURL || BASE_SENTRY_URL
-		this.organisationSlug = options.organisation
-		this.projectSlug = options.project
-		this.apiKey = options.apiKey
+  constructor(options) {
+    this.baseSentryURL = options.baseSentryURL || BASE_SENTRY_URL
+    this.organisationSlug = options.organisation
+    this.projectSlug = options.project
+    this.apiKey = options.apiKey
 
-		this.releaseVersion = options.release
+    this.releaseVersion = options.release
 
-		this.include = options.include || /\.js$|\.map$/
-		this.exclude = options.exclude
+    this.include = options.include || /\.js$|\.map$/
+    this.exclude = options.exclude
 
-		this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
-		this.suppressErrors = options.suppressErrors
-	}
+    this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
+    this.suppressErrors = options.suppressErrors
+  }
 
-	apply(compiler) {
-		compiler.plugin('after-emit', (compilation, cb) => {
-			const errors = this.ensureRequiredOptions()
+  apply(compiler) {
+    compiler.plugin('after-emit', (compilation, cb) => {
+      const errors = this.ensureRequiredOptions()
 
-			if (errors) {
-				return this.handleErrors(errors, compilation, cb)
-			}
+      if (errors) {
+        return this.handleErrors(errors, compilation, cb)
+      }
 
-			const files = this.getFiles(compilation)
+      const files = this.getFiles(compilation)
 
-			if (typeof this.releaseVersion === 'function') {
-				this.releaseVersion = this.releaseVersion(compilation.hash)
-			}
+      if (typeof this.releaseVersion === 'function') {
+        this.releaseVersion = this.releaseVersion(compilation.hash)
+      }
 
-			return this.createRelease()
-				.then(() => this.uploadFiles(files))
-				.then(() => cb())
-				.catch((err) => this.handleErrors(err, compilation, cb))
-		})
-	}
+      return this.createRelease()
+        .then(() => this.uploadFiles(files))
+        .then(() => cb())
+        .catch(err => this.handleErrors(err, compilation, cb))
+    })
+  }
 
-	handleErrors(err, compilation, cb) {
-		const errorMsg = `Sentry Plugin: ${err}`
-		if (this.suppressErrors) {
-			compilation.warnings.push(errorMsg)
-		}
-		else {
-			compilation.errors.push(errorMsg)
-		}
+  handleErrors(err, compilation, cb) {
+    const errorMsg = `Sentry Plugin: ${err}`
+    if (this.suppressErrors) {
+      compilation.warnings.push(errorMsg)
+    }
+    else {
+      compilation.errors.push(errorMsg)
+    }
 
-		cb()
-	}
+    cb()
+  }
 
-	ensureRequiredOptions() {
-		if (!this.organisationSlug) {
-			return new Error('Must provide organisation')
-		}
-		else if (!this.projectSlug) {
-			return new Error(('Must provide project'))
-		}
-		else if (!this.apiKey) {
-			return new Error('Must provide api key')
-		}
-		else if (!this.releaseVersion) {
-			return new Error('Must provide release version')
-		}
-		else {
-			return null
-		}
-	}
+  ensureRequiredOptions() {
+    if (!this.organisationSlug) {
+      return new Error('Must provide organisation')
+    }
+    else if (!this.projectSlug) {
+      return new Error('Must provide project')
+    }
+    else if (!this.apiKey) {
+      return new Error('Must provide api key')
+    }
+    else if (!this.releaseVersion) {
+      return new Error('Must provide release version')
+    }
+    else {
+      return null
+    }
+  }
 
-	getFiles(compilation) {
-		return Object.keys(compilation.assets)
-			.map(name => {
-				if(this.isIncludeOrExclude(name)) return { name, path: compilation.assets[name].existsAt }
-				return null
-			})
-			.filter(i => i)
-	}
+  getFiles(compilation) {
+    return Object.keys(compilation.assets)
+      .map((name) => {
+        if (this.isIncludeOrExclude(name)) {
+          return { name, path: compilation.assets[name].existsAt }
+        }
+        return null
+      })
+      .filter(i => i)
+  }
 
-	isIncludeOrExclude(filename) {
-		const isIncluded = this.include ? this.include.test(filename) : true
-		const isExcluded = this.exclude ? this.exclude.test(filename) : false
+  isIncludeOrExclude(filename) {
+    const isIncluded = this.include ? this.include.test(filename) : true
+    const isExcluded = this.exclude ? this.exclude.test(filename) : false
 
-		return isIncluded && !isExcluded
-	}
+    return isIncluded && !isExcluded
+  }
 
-	createRelease() {
-		return request({
-			url: `${this.sentryReleaseUrl()}/`,
-			method: 'POST',
-			auth: {
-				bearer: this.apiKey
-			},
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ version: this.releaseVersion })
-		})
-	}
+  createRelease() {
+    return request({
+      url: `${this.sentryReleaseUrl()}/`,
+      method: 'POST',
+      auth: {
+        bearer: this.apiKey,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ version: this.releaseVersion }),
+    })
+  }
 
-	uploadFiles(files) {
-		return Promise.all(files.map(this.uploadFile.bind(this)))
-	}
+  uploadFiles(files) {
+    return Promise.all(files.map(this.uploadFile.bind(this)))
+  }
 
-	uploadFile({ path, name }) {
-		return request({
-			url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
-			method: 'POST',
-			auth: {
-				bearer: this.apiKey
-			},
-			formData: {
-				file: fs.createReadStream(path),
-				name: this.filenameTransform(name)
-			}
-		})
-	}
+  uploadFile({ path, name }) {
+    return request({
+      url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
+      method: 'POST',
+      auth: {
+        bearer: this.apiKey,
+      },
+      formData: {
+        file: fs.createReadStream(path),
+        name: this.filenameTransform(name),
+      },
+    })
+  }
 
-	sentryReleaseUrl() {
-		return `${this.baseSentryURL}/${this.organisationSlug}/${this.projectSlug}/releases`
-	}
+  sentryReleaseUrl() {
+    return `${this.baseSentryURL}/${this.organisationSlug}/${this.projectSlug}/releases`
+  }
 }
