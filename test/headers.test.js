@@ -50,6 +50,9 @@ describe('uploading with correct headers', () => {
                     .toHaveBeenCalledWithObject({
                         headers: {
                             sourcemap: 'index.bundle.js.map'
+                        },
+                        formData: {
+                            header: 'sourcemap:index.bundle.js.map'
                         }
                     });
 			})
@@ -63,6 +66,9 @@ describe('uploading with correct headers', () => {
                     .toHaveBeenCalledWithObject({
                         headers: {
                             sourcemap: 'index.bundle.js.map'
+                        },
+                        formData: {
+                            header: 'sourcemap:index.bundle.js.map'
                         }
                     });
 			})
@@ -80,7 +86,10 @@ describe('uploading with correct headers', () => {
 				expect(request.default)
                     .toHaveBeenCalledWithObject({
                         headers: {
-                            sourcemap: 'renamed-the-sourcemap.map'
+                            sourcemap: 'renamed-the-sourcemap.map',
+                        },
+                        formData: {
+                            header: 'sourcemap:renamed-the-sourcemap.map'
                         }
                     });
 			})
@@ -97,6 +106,9 @@ describe('uploading with correct headers', () => {
                     .toHaveBeenCalledWithObject({
                         headers: {
                             sourcemap: 'renamed-the-sourcemap.map'
+                        },
+                        formData: {
+                            header: 'sourcemap:renamed-the-sourcemap.map'
                         }
                     });
 			})

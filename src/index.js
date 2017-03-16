@@ -193,8 +193,8 @@ module.exports = class SentryPlugin {
 		})
 	}
 
-	uploadFile({ path, name, headers }) {
-		return request({
+	uploadFile({ path, name, headers, headerStr }) {
+		let requestObj = {
 			url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
 			method: 'POST',
 			auth: {
@@ -205,7 +205,13 @@ module.exports = class SentryPlugin {
 				name: this.filenameTransform(name),
 			},
 			headers,
-		})
+		};
+
+		if (headerStr) {
+			requestObj.formData.headers = headerStr
+		}
+
+		return request(requestObj);
 	}
 
 	uploadFiles(files) {
@@ -213,8 +219,9 @@ module.exports = class SentryPlugin {
 			const headers = file.sourceMapName ? {
 				sourcemap: file.sourceMapName
 			} : {}
+			const headerStr = file.sourceMapName ? ("sourcemap:" + file.sourceMapName) : null
 
-			return this.uploadFile(Object.assign(file, {headers}))
+			return this.uploadFile(Object.assign(file, {headers, headerStr}))
 		}))
 	}
 
