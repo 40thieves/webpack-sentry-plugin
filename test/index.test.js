@@ -9,6 +9,8 @@ import {
 	expectReleaseDoesNotContainFile
 } from './helpers/assertion'
 
+const SourceMapDevToolPlugin = require('webpack/lib/SourceMapDevToolPlugin')
+
 function ensureOutputPath() {
 	if (!fs.existsSync(OUTPUT_PATH)) {
 		fs.mkdirSync(OUTPUT_PATH)
@@ -55,6 +57,43 @@ describe('uploading files to Sentry release', () => {
 			.then(() => fetchFiles(release))
 			.then(expectReleaseContainsFile('~/index.bundle.js'))
 			.then(expectReleaseContainsFile('~/index.bundle.js.map'))
+	})
+
+	it('uploads source and matching source map with output.sourceMapFilename', () => {
+		const webpackConfig = createWebpackConfig({ release });
+        webpackConfig.output.sourceMapFilename = 'renamed-the-sourcemap.map';
+
+		return runWebpack(webpackConfig)
+			.then(() => fetchFiles(release))
+			.then(expectReleaseContainsFile('~/index.bundle.js'))
+			.then(expectReleaseContainsFile('~/renamed-the-sourcemap.map'))
+	})
+
+	it('uploads source and matching source map with SourceMapDevToolPlugin', () => {
+		const webpackConfig = createWebpackConfig({ release });
+        delete webpackConfig.devtool;
+        webpackConfig.plugins.push(new SourceMapDevToolPlugin({
+            filename: 'renamed-the-sourcemap.map'
+        }));
+
+		return runWebpack(webpackConfig)
+			.then(() => fetchFiles(release))
+			.then(expectReleaseContainsFile('~/index.bundle.js'))
+			.then(expectReleaseContainsFile('~/renamed-the-sourcemap.map'))
+	})
+
+	it('uploads source and sourcemap with devtool: hidden-source-map', () => {
+		return runWebpack(createWebpackConfig({ release }, { devtool: 'hidden-source-map'}))
+			.then(() => fetchFiles(release))
+			.then(expectReleaseContainsFile('~/index.bundle.js'))
+			.then(expectReleaseContainsFile('~/index.bundle.js.map'))
+	})
+
+	it('uploads source only with devtool: eval', () => {
+		return runWebpack(createWebpackConfig({ release }, { devtool: 'eval'}))
+			.then(() => fetchFiles(release))
+			.then(expectReleaseContainsFile('~/index.bundle.js'))
+			.then(expectReleaseDoesNotContainFile('~/index.bundle.js.map'))
 	})
 
 	it('filters files based on include', () => {

@@ -1,10 +1,12 @@
 const responses = {
 	release: {
 		'bad-release': () => Promise.reject(new Error('Release request error')),
-		'bad-upload': () => Promise.resolve()
+		'bad-upload': () => Promise.resolve(),
+		'successful-upload': () => Promise.resolve()
 	},
 	upload: {
-		'bad-upload': () => Promise.reject(new Error('Upload request error'))
+		'bad-upload': () => Promise.reject(new Error('Upload request error')),
+		'successful-upload': () => Promise.resolve()
 	}
 }
 
@@ -23,6 +25,7 @@ function mockRequestPromise({ url, body }) {
 			return responses.upload[version]()
 		}
 	}
+	return Promise.reject(new Error("Mock: Unknown"));
 }
 /* eslint-enable consistent-return */
 
