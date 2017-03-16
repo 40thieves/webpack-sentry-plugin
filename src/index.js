@@ -208,7 +208,7 @@ module.exports = class SentryPlugin {
 		};
 
 		if (headerStr) {
-			requestObj.formData.headers = headerStr
+			requestObj.formData.header = headerStr
 		}
 
 		return request(requestObj);
