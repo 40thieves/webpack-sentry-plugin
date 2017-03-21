@@ -114,4 +114,16 @@ describe('uploading files to Sentry release', () => {
       .then(
         expectReleaseContainsFile('a-filename-prefix-index.bundle.js.map'),
       ))
+
+  it('removes source maps after compilation', () =>
+    runWebpack(
+      createWebpackConfig({
+        release,
+        deleteAfterCompile: true,
+      }),
+    ).then(() => {
+      expect(
+        fs.existsSync(path.join(OUTPUT_PATH, 'index.bundle.js.map')),
+      ).toEqual(false)
+    }))
 })
