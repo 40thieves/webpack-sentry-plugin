@@ -2,7 +2,11 @@ import fs from 'fs'
 import path from 'path'
 
 import { cleanUpRelease, fetchRelease, fetchFiles } from './helpers/sentry'
-import { createWebpackConfig, runWebpack, OUTPUT_PATH } from './helpers/webpack'
+import {
+  createWebpackConfig,
+  runWebpack,
+  OUTPUT_PATH,
+} from './helpers/webpack'
 import {
   expectNoFailure,
   expectReleaseContainsFile,
@@ -107,5 +111,7 @@ describe('uploading files to Sentry release', () => {
       }),
     )
       .then(() => fetchFiles(release))
-      .then(expectReleaseContainsFile('a-filename-prefix-index.bundle.js.map')))
+      .then(
+        expectReleaseContainsFile('a-filename-prefix-index.bundle.js.map'),
+      ))
 })
