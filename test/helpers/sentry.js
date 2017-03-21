@@ -11,7 +11,7 @@ export const {
   SENTRY_PROJECT,
 } = process.env
 
-const SENTRY_URL = `https://sentry.io/api/0/projects/${SENTRY_ORGANISATION}/${SENTRY_PROJECT}`
+const SENTRY_URL = `https://sentry.io/api/0/projects/${SENTRY_ORGANISATION}/${SENTRY_PROJECT}` // eslint-disable-line max-len
 
 export function cleanUpRelease(releaseVersion) {
   return () =>

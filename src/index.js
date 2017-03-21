@@ -123,6 +123,6 @@ module.exports = class SentryPlugin {
   }
 
   sentryReleaseUrl() {
-    return `${this.baseSentryURL}/${this.organisationSlug}/${this.projectSlug}/releases`
+    return `${this.baseSentryURL}/${this.organisationSlug}/${this.projectSlug}/releases` // eslint-disable-line max-len
   }
 }
