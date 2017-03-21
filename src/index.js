@@ -3,7 +3,9 @@ import fs from 'fs'
 
 const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
 
+const DEFAULT_INCLUDE = /\.js$|\.map$/
 const DEFAULT_TRANSFORM = filename => `~/${filename}`
+const DEFAULT_DELETE_REGEX = /\.map$/
 
 module.exports = class SentryPlugin {
   constructor(options) {
@@ -14,11 +16,14 @@ module.exports = class SentryPlugin {
 
     this.releaseVersion = options.release
 
-    this.include = options.include || /\.js$|\.map$/
+    this.include = options.include || DEFAULT_INCLUDE
     this.exclude = options.exclude
 
     this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
     this.suppressErrors = options.suppressErrors
+
+    this.deleteAfterCompile = options.deleteAfterCompile
+    this.deleteRegex = options.deleteRegex || DEFAULT_DELETE_REGEX
   }
 
   apply(compiler) {
@@ -39,6 +44,12 @@ module.exports = class SentryPlugin {
         .then(() => this.uploadFiles(files))
         .then(() => cb())
         .catch(err => this.handleErrors(err, compilation, cb))
+    })
+
+    compiler.plugin('done', (stats) => {
+      if (this.deleteAfterCompile) {
+        this.deleteFiles(stats)
+      }
     })
   }
 
@@ -124,5 +135,14 @@ module.exports = class SentryPlugin {
 
   sentryReleaseUrl() {
     return `${this.baseSentryURL}/${this.organisationSlug}/${this.projectSlug}/releases` // eslint-disable-line max-len
+  }
+
+  deleteFiles(stats) {
+    Object.keys(stats.compilation.assets)
+      .filter(name => this.deleteRegex.test(name))
+      .forEach((name) => {
+        const { existsAt } = stats.compilation.assets[name]
+        fs.unlinkSync(existsAt)
+      })
   }
 }

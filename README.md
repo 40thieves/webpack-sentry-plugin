@@ -111,6 +111,8 @@ var config = {
 
 - `baseSentryURL`: URL of Sentry instance. Shouldn't need to set if using sentry.io, but useful if self hosting
 
+- `deleteAfterCompile`: Boolean determining whether source maps should be deleted after the webpack compile finishes. Defaults to `false`
+
 - `organisation`: Sentry organisation to upload files to
 
 - `project`: Sentry project to upload files to
