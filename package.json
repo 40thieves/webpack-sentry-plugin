@@ -13,11 +13,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "babel src --out-dir dist",
-    "prepublish": "npm test && npm run format && npm run lint && npm run build",
-    "test": "jest",
-    "format": "prettier-eslint --write \"{src,test}/**/*.js\"",
-    "lint": "eslint src test; exit 0"
+    "start": "nps",
+    "test": "nps test",
+    "prepublish": "nps prepublish",
+    "precommit": "opt --in pre-commit --exec \"nps format lint\"",
+    "prepush": "opt --in pre-push --exec \"nps validate\""
   },
   "author": "Alasdair Smith <ali@alasdairsmith.co.uk>",
   "license": "MIT",
@@ -42,7 +42,10 @@
     "eslint": "^3.12.2",
     "eslint-config-airbnb-base": "^11.1.1",
     "eslint-plugin-import": "^2.2.0",
+    "husky": "^0.13.2",
     "jest": "^17.0.3",
+    "nps": "^5.0.5",
+    "opt-cli": "^1.5.1",
     "prettier": "^0.22.0",
     "prettier-eslint-cli": "^3.1.2",
     "webpack": "^2.3.0"

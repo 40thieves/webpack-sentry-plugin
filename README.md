@@ -133,5 +133,7 @@ Contributions are welcome 😄. To run the tests, please ensure you have the rel
 
 *Warning* ⚠️: The test suite will create releases & upload files. They should be cleaned up afterward, but ensure that you are not overwriting something important!
 
+- `npm start`: List available commands (in green at bottom)
 - `npm test`: Runs the test suite
-- `npm run build`: Compiles distribution build
+- `npm start lint`: Runs linting
+- `npm start format`: Formats code with [prettier-eslint](https://github.com/prettier/prettier-eslint)
