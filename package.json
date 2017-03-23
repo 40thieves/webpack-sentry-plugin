@@ -9,6 +9,9 @@
     "source-map"
   ],
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "babel src --out-dir dist",
     "prepublish": "npm test && npm run format && npm run lint && npm run build",
