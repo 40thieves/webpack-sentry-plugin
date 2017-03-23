@@ -1,5 +1,5 @@
 {
-	"extends": "airbnb/base",
+	"extends": "airbnb-base",
 	"rules": {
 		"max-len": [2, 80],
 		"semi": [2, "never"],
