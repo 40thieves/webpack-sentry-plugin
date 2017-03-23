@@ -15,7 +15,8 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
-    "prepublish": "nps prerelease"
+    "prepublish": "nps prerelease",
+    "precommit": "opt --in pre-commit --exec \"npm start validate\""
   },
   "author": "Alasdair Smith <ali@alasdairsmith.co.uk>",
   "license": "MIT",
