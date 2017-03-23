@@ -117,7 +117,7 @@ var config = {
 
 - `project`: Sentry project to upload files to
 
-- `apiKey`: Sentry api key ([Generate one here](https://sentry.io/api/))
+- `apiKey`: Sentry api key ([Generate one here](https://sentry.io/api/), ensure that `project:write` is selected under scopes)
 
 
 ### Thanks
