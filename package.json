@@ -16,7 +16,8 @@
     "start": "nps",
     "test": "nps test",
     "prepublish": "nps prerelease",
-    "precommit": "opt --in pre-commit --exec \"npm start validate\""
+    "precommit": "opt --in pre-commit --exec \"nps format lint\"",
+    "prepush": "opt --in pre-push --exec \"nps validate\""
   },
   "author": "Alasdair Smith <ali@alasdairsmith.co.uk>",
   "license": "MIT",
