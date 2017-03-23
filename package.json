@@ -15,7 +15,7 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
-    "prepublish": "nps prerelease",
+    "prepublish": "nps prepublish",
     "precommit": "opt --in pre-commit --exec \"nps format lint\"",
     "prepush": "opt --in pre-push --exec \"nps validate\""
   },
