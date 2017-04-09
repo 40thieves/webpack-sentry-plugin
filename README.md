@@ -57,7 +57,7 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `apiKey`: **Required**, Sentry api key ([Generate one here](https://sentry.io/api/), ensure that `project:write`, `project:read` and `project:releases` are selected ,under scopes)
 
-- `release`: **Required**, string or function that returns the release name. See [#what-is-a-release] below for details
+- `release`: **Required**, string or function that returns the release name. See [What is a release?](#what-is-a-release) below for details
 
 - `exclude`: RegExp to match for excluded files
 
