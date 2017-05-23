@@ -100,6 +100,25 @@ $ yarn add webpack-sentry-plugin --dev
     ]
   }
   ```
+  
+  - `filenameTransform`: Function to transform the body before POSTING to Sentry. Defaults to sending the version.
+
+  ```js
+  var config = {
+    plugins: [
+      new SentryPlugin({
+        bodyTransform: function(version) {
+          return Object.assign({}, { version }, {
+            refs: [
+               repository: 'project-repo',
+               commit: process.env.GIT_SHA
+            ]
+          })
+        }
+      })
+    ]
+  }
+  ```
 
 - `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
 
