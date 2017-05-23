@@ -6,6 +6,7 @@ const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
 const DEFAULT_INCLUDE = /\.js$|\.map$/
 const DEFAULT_TRANSFORM = filename => `~/${filename}`
 const DEFAULT_DELETE_REGEX = /\.map$/
+const DEFAULT_BODY_TRANSFORM = version => ({ version })
 
 module.exports = class SentryPlugin {
   constructor(options) {
@@ -14,6 +15,7 @@ module.exports = class SentryPlugin {
     this.projectSlug = options.project
     this.apiKey = options.apiKey
 
+    this.bodyTransform = options.bodyTransform || DEFAULT_BODY_TRANSFORM
     this.releaseVersion = options.release
 
     this.include = options.include || DEFAULT_INCLUDE
@@ -111,7 +113,7 @@ module.exports = class SentryPlugin {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ version: this.releaseVersion }),
+      body: JSON.stringify(this.bodyTransform(this.releaseVersion)),
     })
   }
 
