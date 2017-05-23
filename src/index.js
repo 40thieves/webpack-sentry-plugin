@@ -15,7 +15,7 @@ module.exports = class SentryPlugin {
     this.projectSlug = options.project
     this.apiKey = options.apiKey
 
-    this.bodyTransform = options.bodyTransform || DEFAULT_BODY_TRANSFORM
+    this.releaseBody = options.releaseBody || DEFAULT_BODY_TRANSFORM
     this.releaseVersion = options.release
 
     this.include = options.include || DEFAULT_INCLUDE
@@ -40,6 +40,10 @@ module.exports = class SentryPlugin {
 
       if (typeof this.releaseVersion === 'function') {
         this.releaseVersion = this.releaseVersion(compilation.hash)
+      }
+
+      if (typeof this.releaseBody === 'function') {
+        this.releaseBody = this.releaseBody(this.releaseVersion)
       }
 
       return this.createRelease()
@@ -113,7 +117,7 @@ module.exports = class SentryPlugin {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(this.bodyTransform(this.releaseVersion)),
+      body: JSON.stringify(this.releaseBody),
     })
   }
 
