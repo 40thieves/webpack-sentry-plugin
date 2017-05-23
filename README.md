@@ -101,19 +101,20 @@ $ yarn add webpack-sentry-plugin --dev
   }
   ```
   
-  - `filenameTransform`: Function to transform the body before POSTING to Sentry. Defaults to sending the version.
+  - `releaseBody`: Object or function that returns the body that will be sent to Sentry. Defaults to sending the version.
 
   ```js
   var config = {
     plugins: [
       new SentryPlugin({
-        bodyTransform: function(version) {
-          return Object.assign({}, { version }, {
+        releaseBody: function(version) {
+          return { 
+            version,
             refs: [
                repository: 'project-repo',
                commit: process.env.GIT_SHA
             ]
-          })
+          }
         }
       })
     ]
