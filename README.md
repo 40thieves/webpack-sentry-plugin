@@ -101,7 +101,9 @@ $ yarn add webpack-sentry-plugin --dev
   }
   ```
 
-- `suppressErrors`: Display warnings instead of failing webpack build - useful in case webpack compilation is done during deploy on multiple instances
+- `suppressErrors`: Display warnings instead of failing webpack build
+
+- `suppressConflictError`: Similar to `suppressErrors`, but only supresses release conflict errors - useful in case webpack compilation is done during deploy on multiple instances
 
 - `baseSentryURL`: URL of Sentry instance. Shouldn't need to set if using sentry.io, but useful if self hosting
 
