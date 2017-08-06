@@ -139,7 +139,7 @@ new SentryPlugin({
 The final option is to manually provide a string to the `release` option:
 
 ```js
-new Sentry Plugin({
+new SentryPlugin({
   // ...
   release: 'foo-release'
 });
