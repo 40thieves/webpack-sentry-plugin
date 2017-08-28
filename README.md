@@ -100,6 +100,26 @@ $ yarn add webpack-sentry-plugin --dev
     ]
   }
   ```
+  
+  - `releaseBody`: Object or function that returns the body that will be sent to Sentry. Defaults to sending the version.
+
+  ```js
+  var config = {
+    plugins: [
+      new SentryPlugin({
+        releaseBody: function(version) {
+          return { 
+            version,
+            refs: [
+               repository: 'project-repo',
+               commit: process.env.GIT_SHA
+            ]
+          }
+        }
+      })
+    ]
+  }
+  ```
 
 - `suppressErrors`: Display warnings instead of failing webpack build
 
