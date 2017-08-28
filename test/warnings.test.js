@@ -1,14 +1,14 @@
 import { createWebpackConfig, runWebpack } from './helpers/webpack'
 
-it('adds warning if Sentry organisation slug is missing', () =>
+it('adds warning if Sentry organization slug is missing', () =>
   runWebpack(
-    createWebpackConfig({ organisation: null, suppressErrors: true }),
+    createWebpackConfig({ organization: null, suppressErrors: true }),
   ).catch(({
     warnings,
   }) => {
     expect(warnings).toHaveLength(1)
     expect(warnings[0]).toEqual(
-      'Sentry Plugin: Error: Must provide organisation',
+      'Sentry Plugin: Error: Must provide organization',
     )
   }))
 

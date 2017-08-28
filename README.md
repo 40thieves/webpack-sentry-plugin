@@ -36,7 +36,7 @@ $ yarn add webpack-sentry-plugin --dev
      plugins: [
        new SentryPlugin({
          // Sentry options are required
-         organisation: 'your-organisation-name',
+         organization: 'your-organization-name',
          project: 'your-project-name',
          apiKey: process.env.SENTRY_API_KEY,
          
@@ -51,7 +51,7 @@ $ yarn add webpack-sentry-plugin --dev
 
 #### Options
 
-- `organisation`: **Required**, Sentry organisation to upload files to
+- `organization`: **Required**, Sentry organization to upload files to
 
 - `project`: **Required**, Sentry project to upload files to
 

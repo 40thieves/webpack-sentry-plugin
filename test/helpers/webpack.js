@@ -3,7 +3,7 @@ import webpack from 'webpack'
 
 import SentryWebpackPlugin from '../../src/index'
 
-import { SENTRY_API_KEY, SENTRY_ORGANISATION, SENTRY_PROJECT } from './sentry'
+import { SENTRY_API_KEY, SENTRY_ORGANIZATION, SENTRY_PROJECT } from './sentry'
 
 export const OUTPUT_PATH = path.resolve(__dirname, '../../.tmp')
 
@@ -29,7 +29,7 @@ function configureSentryPlugin(config) {
   const options = Object.assign(
     {},
     {
-      organisation: SENTRY_ORGANISATION,
+      organization: SENTRY_ORGANIZATION,
       project: SENTRY_PROJECT,
       apiKey: SENTRY_API_KEY,
     },
