@@ -11,7 +11,7 @@ const DEFAULT_BODY_TRANSFORM = version => ({ version })
 module.exports = class SentryPlugin {
   constructor(options) {
     this.baseSentryURL = options.baseSentryURL || BASE_SENTRY_URL
-    this.organisationSlug = options.organisation
+    this.organizationSlug = options.organization || options.organisation
     this.projectSlug = options.project
     this.apiKey = options.apiKey
 
@@ -76,8 +76,8 @@ module.exports = class SentryPlugin {
   }
 
   ensureRequiredOptions() {
-    if (!this.organisationSlug) {
-      return new Error('Must provide organisation')
+    if (!this.organizationSlug) {
+      return new Error('Must provide organization')
     }
     else if (!this.projectSlug) {
       return new Error('Must provide project')
@@ -144,7 +144,7 @@ module.exports = class SentryPlugin {
   }
 
   sentryReleaseUrl() {
-    return `${this.baseSentryURL}/${this.organisationSlug}/${this.projectSlug}/releases` // eslint-disable-line max-len
+    return `${this.baseSentryURL}/${this.organizationSlug}/${this.projectSlug}/releases` // eslint-disable-line max-len
   }
 
   deleteFiles(stats) {

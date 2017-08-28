@@ -7,11 +7,11 @@ dotenv.load({ silent: true })
 
 export const {
   SENTRY_API_KEY,
-  SENTRY_ORGANISATION,
+  SENTRY_ORGANIZATION,
   SENTRY_PROJECT,
 } = process.env
 
-const SENTRY_URL = `https://sentry.io/api/0/projects/${SENTRY_ORGANISATION}/${SENTRY_PROJECT}` // eslint-disable-line max-len
+const SENTRY_URL = `https://sentry.io/api/0/projects/${SENTRY_ORGANIZATION}/${SENTRY_PROJECT}` // eslint-disable-line max-len
 
 export function cleanUpRelease(releaseVersion) {
   return () =>
