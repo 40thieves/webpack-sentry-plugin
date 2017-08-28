@@ -21,6 +21,7 @@ module.exports = class SentryPlugin {
 
     this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
     this.suppressErrors = options.suppressErrors
+    this.suppressConflictError = options.suppressConflictError
 
     this.deleteAfterCompile = options.deleteAfterCompile
     this.deleteRegex = options.deleteRegex || DEFAULT_DELETE_REGEX
@@ -55,7 +56,10 @@ module.exports = class SentryPlugin {
 
   handleErrors(err, compilation, cb) {
     const errorMsg = `Sentry Plugin: ${err}`
-    if (this.suppressErrors) {
+    if (
+      this.suppressErrors ||
+      (this.suppressConflictError && err.statusCode === 409)
+    ) {
       compilation.warnings.push(errorMsg)
     }
     else {
