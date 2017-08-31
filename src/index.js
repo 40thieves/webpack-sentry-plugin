@@ -1,18 +1,39 @@
 import request from 'request-promise'
 import fs from 'fs'
 
-const BASE_SENTRY_URL = 'https://sentry.io/api/0/projects'
+const BASE_SENTRY_URL = 'https://sentry.io/api/0'
 
 const DEFAULT_INCLUDE = /\.js$|\.map$/
 const DEFAULT_TRANSFORM = filename => `~/${filename}`
 const DEFAULT_DELETE_REGEX = /\.map$/
-const DEFAULT_BODY_TRANSFORM = version => ({ version })
+const DEFAULT_BODY_TRANSFORM = (version, projects) => ({ version, projects })
 
 module.exports = class SentryPlugin {
   constructor(options) {
-    this.baseSentryURL = options.baseSentryURL || BASE_SENTRY_URL
+    // The baseSentryURL option was previously documented to have
+    // `/projects` on the end. We now expect the basic API endpoint
+    // but remove any `/projects` suffix for backwards compatibility.
+    const projectsRegex = /\/projects$/
+    if (options.baseSentryURL) {
+      if (projectsRegex.test(options.baseSentryURL)) {
+        // eslint-disable-next-line no-console
+        console.warn("baseSentryURL with '/projects' suffix is deprecated; " +
+          'see https://github.com/40thieves/webpack-sentry-plugin/issues/38')
+        this.baseSentryURL = options.baseSentryURL.replace(projectsRegex, '')
+      }
+      else {
+        this.baseSentryURL = options.baseSentryURL
+      }
+    }
+    else {
+      this.baseSentryURL = BASE_SENTRY_URL
+    }
+
     this.organizationSlug = options.organization || options.organisation
     this.projectSlug = options.project
+    if (typeof this.projectSlug === 'string') {
+      this.projectSlug = [this.projectSlug]
+    }
     this.apiKey = options.apiKey
 
     this.releaseBody = options.releaseBody || DEFAULT_BODY_TRANSFORM
@@ -44,7 +65,10 @@ module.exports = class SentryPlugin {
       }
 
       if (typeof this.releaseBody === 'function') {
-        this.releaseBody = this.releaseBody(this.releaseVersion)
+        this.releaseBody = this.releaseBody(
+          this.releaseVersion,
+          this.projectSlug
+        )
       }
 
       return this.createRelease()
@@ -144,7 +168,7 @@ module.exports = class SentryPlugin {
   }
 
   sentryReleaseUrl() {
-    return `${this.baseSentryURL}/${this.organizationSlug}/${this.projectSlug}/releases` // eslint-disable-line max-len
+    return `${this.baseSentryURL}/organizations/${this.organizationSlug}/releases` // eslint-disable-line max-len
   }
 
   deleteFiles(stats) {

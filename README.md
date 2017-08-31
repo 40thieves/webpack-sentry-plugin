@@ -53,7 +53,7 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `organization`: **Required**, Sentry organization to upload files to
 
-- `project`: **Required**, Sentry project to upload files to
+- `project`: **Required**, Sentry project(s) to upload files to. Can be a string project slug or an array of project slugs if the release should be associated with multiple projects.
 
 - `apiKey`: **Required**, Sentry api key ([Generate one here](https://sentry.io/api/), ensure that `project:write`, `project:read` and `project:releases` are selected ,under scopes)
 
