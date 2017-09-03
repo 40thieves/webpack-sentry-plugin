@@ -55,7 +55,7 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `project`: **Required**, Sentry project to upload files to
 
-- `apiKey`: **Required**, Sentry api key ([Generate one here](https://sentry.io/api/), ensure that `project:write`, `project:read` and `project:releases` are selected ,under scopes)
+- `apiKey`: **Required**, Sentry auth token ([Generate one here](https://sentry.io/api/), ensure that `project:write`, `project:read` and `project:releases` are selected ,under scopes)
 
 - `release`: **Required**, string or function that returns the release name. See [What is a release?](#what-is-a-release) below for details
 
