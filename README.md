@@ -129,6 +129,8 @@ $ yarn add webpack-sentry-plugin --dev
 
 - `deleteAfterCompile`: Boolean determining whether source maps should be deleted after the webpack compile finishes. Defaults to `false`
 
+- `requestOptions`: Object of options passed through to the underlying `request` call; see the [request library documentation](https://github.com/request/request#requestoptions-callback) for available options.
+
 ### What is a `release`?
 
 A release is a concept that Sentry uses to attach source maps to a known version of your code. The plugin creates one for you, but you need to provide a "name" for a particular version of your code, which is just a string. Sentry can then use the release to say that a it found an error in this known version of your code. 
