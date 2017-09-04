@@ -1,5 +1,7 @@
 import { createWebpackConfig, runWebpack } from './helpers/webpack'
 
+jest.mock('request-promise')
+
 it('adds error if Sentry organization slug is missing', () =>
   runWebpack(
     createWebpackConfig({ organization: null }),
