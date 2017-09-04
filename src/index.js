@@ -17,8 +17,10 @@ module.exports = class SentryPlugin {
     if (options.baseSentryURL) {
       if (projectsRegex.test(options.baseSentryURL)) {
         // eslint-disable-next-line no-console
-        console.warn("baseSentryURL with '/projects' suffix is deprecated; " +
-          'see https://github.com/40thieves/webpack-sentry-plugin/issues/38')
+        console.warn(
+          "baseSentryURL with '/projects' suffix is deprecated; " +
+            'see https://github.com/40thieves/webpack-sentry-plugin/issues/38',
+        )
         this.baseSentryURL = options.baseSentryURL.replace(projectsRegex, '')
       }
       else {
@@ -67,7 +69,7 @@ module.exports = class SentryPlugin {
       if (typeof this.releaseBody === 'function') {
         this.releaseBody = this.releaseBody(
           this.releaseVersion,
-          this.projectSlug
+          this.projectSlug,
         )
       }
 
@@ -168,7 +170,8 @@ module.exports = class SentryPlugin {
   }
 
   sentryReleaseUrl() {
-    return `${this.baseSentryURL}/organizations/${this.organizationSlug}/releases` // eslint-disable-line max-len
+    return `${this.baseSentryURL}/organizations/${this
+      .organizationSlug}/releases`
   }
 
   deleteFiles(stats) {
