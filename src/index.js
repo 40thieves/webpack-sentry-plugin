@@ -171,7 +171,7 @@ module.exports = class SentryPlugin {
 
   sentryReleaseUrl() {
     return `${this.baseSentryURL}/organizations/${this
-      .organizationSlug}/releases` // eslint-disable-line max-len
+      .organizationSlug}/releases`
   }
 
   deleteFiles(stats) {
