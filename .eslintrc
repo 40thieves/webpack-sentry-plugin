@@ -10,7 +10,9 @@
 		"no-else-return": 0,
 		"no-use-before-define": [2, "nofunc"],
 		"comma-dangle": 0,
-		"max-nested-callbacks": [2, 5]
+		"max-nested-callbacks": [2, 5],
+		"function-paren-newline": 0,
+		"prefer-promise-reject-errors": 0
 	},
 	"env": {
 		"node": true,
