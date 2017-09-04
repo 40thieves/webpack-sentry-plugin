@@ -159,6 +159,8 @@ new SentryPlugin({
 });
 ```
 
+If you use the webpack build hash as your release name, you will also likely need to expose the build hash to your source code in order to configure Raven (see the [Post deployment](#post-deployment) section). The easiest way to do so is with webpack's [ExtendedAPIPlugin](https://github.com/webpack/docs/wiki/list-of-plugins#extendedapiplugin).
+
 The final option is to manually provide a string to the `release` option:
 
 ```js
