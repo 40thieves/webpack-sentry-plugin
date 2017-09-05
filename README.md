@@ -126,13 +126,13 @@ var config = {
 
 - `suppressConflictError`: Similar to `suppressErrors`, but only supresses release conflict errors - useful in case webpack compilation is done during deploy on multiple instances. (Release conflict errors are HTTP 409 errors thrown by Sentry when the same source map file is uploaded to the same release multiple times.)
 
-- `baseSentryURL`: URL of Sentry instance. Unnecessary if using sentry.io, but useful if self-hosting. Should be a fully qualified domain name with the suffix `/api/v0`, i.e. `https://mysentryinstance.com/api/v0`
+- `baseSentryURL`: Fully qualified URL of Sentry instance. Defaults to `https://sentry.io/api/0` for sentry.io. If self-hosting, set this to the fully qualified domain name of your instance, e.g. `https://mysentryinstance.com/api/v0`
 
-- `deleteAfterCompile`: Boolean determining whether source maps should be deleted on the build server after the webpack compile finishes. Useful if you want to upload source maps to Sentry but do not want to make them publicly available to users of your application. Defaults to `false`
+- `deleteAfterCompile`: Boolean determining whether source maps should be deleted on the build server after the webpack compile finishes. Defaults to `false`
 
 ### What is a `release`?
 
-A release is a concept that Sentry uses to attach source maps to a known version of your code. The plugin creates one for you, but you need to provide a "name" for a particular version of your code, which is just a string. Sentry can then use the release to record that an error was found in a specific known version of your code. Releases are also used to "version" your source maps -- source maps are uploaded to a specific release, and when a raw JavaScript error is reported, the release reported with the error is used to locate and apply the correct source maps.
+A [release](https://docs.sentry.io/learn/releases/) is a concept that Sentry uses to attach source maps to a known version of your code. The plugin creates one for you, but you need to provide a "name" for a particular version of your code, which is just a string. Sentry can then use the release to record that an error was found in a specific known version of your code. Releases are also used to "version" your source maps -- source maps are uploaded to a specific release, and when a raw JavaScript error is reported, the release reported with the error is used to locate and apply the correct source maps.
 
 Passing the string to the plugin really depends on your setup. There are three main approaches:
 
