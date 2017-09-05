@@ -150,17 +150,19 @@ module.exports = class SentryPlugin {
   }
 
   createRelease() {
-    return request(this.combineRequestOptions({
-      url: `${this.sentryReleaseUrl()}/`,
-      method: 'POST',
-      auth: {
-        bearer: this.apiKey,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(this.releaseBody),
-    }))
+    return request(
+      this.combineRequestOptions({
+        url: `${this.sentryReleaseUrl()}/`,
+        method: 'POST',
+        auth: {
+          bearer: this.apiKey,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.releaseBody),
+      }),
+    )
   }
 
   uploadFiles(files) {
@@ -168,17 +170,19 @@ module.exports = class SentryPlugin {
   }
 
   uploadFile({ path, name }) {
-    return request(this.combineRequestOptions({
-      url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
-      method: 'POST',
-      auth: {
-        bearer: this.apiKey,
-      },
-      formData: {
-        file: fs.createReadStream(path),
-        name: this.filenameTransform(name),
-      },
-    }))
+    return request(
+      this.combineRequestOptions({
+        url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
+        method: 'POST',
+        auth: {
+          bearer: this.apiKey,
+        },
+        formData: {
+          file: fs.createReadStream(path),
+          name: this.filenameTransform(name),
+        },
+      }),
+    )
   }
 
   sentryReleaseUrl() {
