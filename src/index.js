@@ -47,6 +47,7 @@ module.exports = class SentryPlugin {
     this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
     this.suppressErrors = options.suppressErrors
     this.suppressConflictError = options.suppressConflictError
+    this.requestOptions = options.requestOptions || {}
 
     this.deleteAfterCompile = options.deleteAfterCompile
     this.deleteRegex = options.deleteRegex || DEFAULT_DELETE_REGEX
@@ -137,8 +138,19 @@ module.exports = class SentryPlugin {
     return isIncluded && !isExcluded
   }
 
+  combineRequestOptions(req) {
+    const combined = Object.assign({}, this.requestOptions, req)
+    if (this.requestOptions.headers) {
+      Object.assign(combined.headers, this.requestOptions.headers, req.headers)
+    }
+    if (this.requestOptions.auth) {
+      Object.assign(combined.auth, this.requestOptions.auth, req.auth)
+    }
+    return combined
+  }
+
   createRelease() {
-    return request({
+    return request(this.combineRequestOptions({
       url: `${this.sentryReleaseUrl()}/`,
       method: 'POST',
       auth: {
@@ -148,7 +160,7 @@ module.exports = class SentryPlugin {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(this.releaseBody),
-    })
+    }))
   }
 
   uploadFiles(files) {
@@ -156,7 +168,7 @@ module.exports = class SentryPlugin {
   }
 
   uploadFile({ path, name }) {
-    return request({
+    return request(this.combineRequestOptions({
       url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
       method: 'POST',
       auth: {
@@ -166,7 +178,7 @@ module.exports = class SentryPlugin {
         file: fs.createReadStream(path),
         name: this.filenameTransform(name),
       },
-    })
+    }))
   }
 
   sentryReleaseUrl() {

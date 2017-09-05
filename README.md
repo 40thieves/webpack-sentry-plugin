@@ -130,6 +130,8 @@ var config = {
 
 - `deleteAfterCompile`: Boolean determining whether source maps should be deleted on the build server after the webpack compile finishes. Defaults to `false`
 
+- `requestOptions`: Object of options passed through to the underlying `request` call; see the [request library documentation](https://github.com/request/request#requestoptions-callback) for available options.
+
 ### What is a `release`?
 
 A [release](https://docs.sentry.io/learn/releases/) is a concept that Sentry uses to attach source maps to a known version of your code. The plugin creates one for you, but you need to provide a "name" for a particular version of your code, which is just a string. Sentry can then use the release to record that an error was found in a specific known version of your code. Releases are also used to "version" your source maps -- source maps are uploaded to a specific release, and when a raw JavaScript error is reported, the release reported with the error is used to locate and apply the correct source maps.
