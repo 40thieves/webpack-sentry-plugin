@@ -130,7 +130,8 @@ var config = {
 
 - `deleteAfterCompile`: Boolean determining whether source maps should be deleted on the build server after the webpack compile finishes. Defaults to `false`
 
-- `requestOptions`: Object of options passed through to the underlying `request` call; see the [request library documentation](https://github.com/request/request#requestoptions-callback) for available options.
+- `requestOptions`: Object of options or function returning object of options passed through to the underlying `request` call; see the [request library documentation](https://github.com/request/request#requestoptions-callback) for available options.
+  - If a function is provided, it is given one argument: `req`, the request object passed to the `request library`. (This is useful if you want to add fields dynamically based on request's data like filename, etc.)
 
 ### What is a `release`?
 

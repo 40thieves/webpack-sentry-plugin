@@ -48,6 +48,9 @@ module.exports = class SentryPlugin {
     this.suppressErrors = options.suppressErrors
     this.suppressConflictError = options.suppressConflictError
     this.requestOptions = options.requestOptions || {}
+    if (typeof this.requestOptions === 'object') {
+      this.requestOptions = () => this.requestOptions
+    }
 
     this.deleteAfterCompile = options.deleteAfterCompile
     this.deleteRegex = options.deleteRegex || DEFAULT_DELETE_REGEX
@@ -139,12 +142,13 @@ module.exports = class SentryPlugin {
   }
 
   combineRequestOptions(req) {
-    const combined = Object.assign({}, this.requestOptions, req)
-    if (this.requestOptions.headers) {
-      Object.assign(combined.headers, this.requestOptions.headers, req.headers)
+    const requestOptions = this.requestOptions(req)
+    const combined = Object.assign({}, requestOptions, req)
+    if (requestOptions.headers) {
+      Object.assign(combined.headers, requestOptions.headers, req.headers)
     }
-    if (this.requestOptions.auth) {
-      Object.assign(combined.auth, this.requestOptions.auth, req.auth)
+    if (requestOptions.auth) {
+      Object.assign(combined.auth, requestOptions.auth, req.auth)
     }
     return combined
   }
