@@ -47,13 +47,20 @@ module.exports = class SentryPlugin {
     this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
     this.suppressErrors = options.suppressErrors
     this.suppressConflictError = options.suppressConflictError
-    this.createReleaseRequestOptions = options.createReleaseRequestOptions || {}
+    this.createReleaseRequestOptions = options.createReleaseRequestOptions || options.requestOptions || {}
     if (typeof this.createReleaseRequestOptions === 'object') {
       this.createReleaseRequestOptions = () => this.createReleaseRequestOptions
     }
-    this.uploadFileRequestOptions = options.uploadFileRequestOptions || {}
+    this.uploadFileRequestOptions = options.uploadFileRequestOptions || options.requestOptions || {}
     if (typeof this.uploadFileRequestOptions === 'object') {
       this.uploadFileRequestOptions = () => this.uploadFileRequestOptions
+    }
+    if (options.requestOptions) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "requestOptions is deprecated. use createReleaseRequestOptions and uploadFileRequestOptions instead; " +
+            'see https://github.com/40thieves/webpack-sentry-plugin/pull/43',
+        )        
     }
 
     this.deleteAfterCompile = options.deleteAfterCompile
