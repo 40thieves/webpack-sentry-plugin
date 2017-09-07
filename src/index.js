@@ -47,9 +47,13 @@ module.exports = class SentryPlugin {
     this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
     this.suppressErrors = options.suppressErrors
     this.suppressConflictError = options.suppressConflictError
-    this.requestOptions = options.requestOptions || {}
-    if (typeof this.requestOptions === 'object') {
-      this.requestOptions = () => this.requestOptions
+    this.createReleaseRequestOptions = options.createReleaseRequestOptions || {}
+    if (typeof this.createReleaseRequestOptions === 'object') {
+      this.createReleaseRequestOptions = () => this.createReleaseRequestOptions
+    }
+    this.uploadFileRequestOptions = options.uploadFileRequestOptions || {}
+    if (typeof this.uploadFileRequestOptions === 'object') {
+      this.uploadFileRequestOptions = () => this.uploadFileRequestOptions
     }
 
     this.deleteAfterCompile = options.deleteAfterCompile
@@ -141,8 +145,8 @@ module.exports = class SentryPlugin {
     return isIncluded && !isExcluded
   }
 
-  combineRequestOptions(req) {
-    const requestOptions = this.requestOptions(req)
+  combineRequestOptions(req, requestOptionsFunc) {
+    const requestOptions = requestOptionsFunc(req)
     const combined = Object.assign({}, requestOptions, req)
     if (requestOptions.headers) {
       Object.assign(combined.headers, requestOptions.headers, req.headers)
@@ -165,7 +169,7 @@ module.exports = class SentryPlugin {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(this.releaseBody),
-      }),
+      }, this.createReleaseRequestOptions),
     )
   }
 
@@ -181,11 +185,12 @@ module.exports = class SentryPlugin {
         auth: {
           bearer: this.apiKey,
         },
+        headers: {},
         formData: {
           file: fs.createReadStream(path),
           name: this.filenameTransform(name),
         },
-      }),
+      }, this.uploadFileRequestOptions),
     )
   }
 

@@ -130,8 +130,11 @@ var config = {
 
 - `deleteAfterCompile`: Boolean determining whether source maps should be deleted on the build server after the webpack compile finishes. Defaults to `false`
 
-- `requestOptions`: Object of options or function returning object of options passed through to the underlying `request` call; see the [request library documentation](https://github.com/request/request#requestoptions-callback) for available options.
-  - If a function is provided, it is given one argument: `req`, the request object passed to the `request library`. (This is useful if you want to add fields dynamically based on request's data like filename, etc.)
+- `createReleaseRequestOptions`: Object of options or function returning object of options passed through to the underlying `request` call on release creating; see the [request library documentation](https://github.com/request/request#requestoptions-callback) for available options.
+  - If a function is provided, it is given one argument: req, an object of options (including url, auth, and body) that the plugin is sending to the underlying request call. (This is useful if you want to configure the request dynamically based on request data such as the filename.)
+
+- `uploadFileRequestOptions`: Object of options or function returning object of options passed through to the underlying `request` call on file uploading; see the [request library documentation](https://github.com/request/request#requestoptions-callback) for available options.
+  - If a function is provided, it is given one argument: req, an object of options (including url, auth, and body) that the plugin is sending to the underlying request call. (This is useful if you want to configure the request dynamically based on request data such as the filename.)
 
 ### What is a `release`?
 
