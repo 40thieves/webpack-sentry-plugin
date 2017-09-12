@@ -47,7 +47,25 @@ module.exports = class SentryPlugin {
     this.filenameTransform = options.filenameTransform || DEFAULT_TRANSFORM
     this.suppressErrors = options.suppressErrors
     this.suppressConflictError = options.suppressConflictError
-    this.requestOptions = options.requestOptions || {}
+    this.createReleaseRequestOptions =
+      options.createReleaseRequestOptions || options.requestOptions || {}
+    if (typeof this.createReleaseRequestOptions === 'object') {
+      this.createReleaseRequestOptions = () => this.createReleaseRequestOptions
+    }
+    this.uploadFileRequestOptions =
+      options.uploadFileRequestOptions || options.requestOptions || {}
+    if (typeof this.uploadFileRequestOptions === 'object') {
+      this.uploadFileRequestOptions = () => this.uploadFileRequestOptions
+    }
+    if (options.requestOptions) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'requestOptions is deprecated. ' +
+        'use createReleaseRequestOptions and ' +
+        'uploadFileRequestOptions instead; ' +
+        'see https://github.com/40thieves/webpack-sentry-plugin/pull/43'
+      )
+    }
 
     this.deleteAfterCompile = options.deleteAfterCompile
     this.deleteRegex = options.deleteRegex || DEFAULT_DELETE_REGEX
@@ -138,30 +156,35 @@ module.exports = class SentryPlugin {
     return isIncluded && !isExcluded
   }
 
-  combineRequestOptions(req) {
-    const combined = Object.assign({}, this.requestOptions, req)
-    if (this.requestOptions.headers) {
-      Object.assign(combined.headers, this.requestOptions.headers, req.headers)
+  // eslint-disable-next-line class-methods-use-this
+  combineRequestOptions(req, requestOptionsFunc) {
+    const requestOptions = requestOptionsFunc(req)
+    const combined = Object.assign({}, requestOptions, req)
+    if (requestOptions.headers) {
+      Object.assign(combined.headers, requestOptions.headers, req.headers)
     }
-    if (this.requestOptions.auth) {
-      Object.assign(combined.auth, this.requestOptions.auth, req.auth)
+    if (requestOptions.auth) {
+      Object.assign(combined.auth, requestOptions.auth, req.auth)
     }
     return combined
   }
 
   createRelease() {
     return request(
-      this.combineRequestOptions({
-        url: `${this.sentryReleaseUrl()}/`,
-        method: 'POST',
-        auth: {
-          bearer: this.apiKey,
+      this.combineRequestOptions(
+        {
+          url: `${this.sentryReleaseUrl()}/`,
+          method: 'POST',
+          auth: {
+            bearer: this.apiKey,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.releaseBody),
         },
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(this.releaseBody),
-      }),
+        this.createReleaseRequestOptions,
+      ),
     )
   }
 
@@ -171,17 +194,21 @@ module.exports = class SentryPlugin {
 
   uploadFile({ path, name }) {
     return request(
-      this.combineRequestOptions({
-        url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
-        method: 'POST',
-        auth: {
-          bearer: this.apiKey,
+      this.combineRequestOptions(
+        {
+          url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
+          method: 'POST',
+          auth: {
+            bearer: this.apiKey,
+          },
+          headers: {},
+          formData: {
+            file: fs.createReadStream(path),
+            name: this.filenameTransform(name),
+          },
         },
-        formData: {
-          file: fs.createReadStream(path),
-          name: this.filenameTransform(name),
-        },
-      }),
+        this.uploadFileRequestOptions,
+      ),
     )
   }
 
