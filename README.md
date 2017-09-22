@@ -111,10 +111,10 @@ var config = {
         return { 
           version,
           projects,
-          refs: [
+          refs: [{
              repository: 'project-repo',
              commit: process.env.GIT_SHA
-          ]
+          }]
         }
       }
     })
