@@ -126,7 +126,7 @@ var config = {
 
 - `suppressConflictError`: Similar to `suppressErrors`, but only supresses release conflict errors - useful in case webpack compilation is done during deploy on multiple instances. (Release conflict errors are HTTP 409 errors thrown by Sentry when the same source map file is uploaded to the same release multiple times.)
 
-- `baseSentryURL`: Fully qualified URL of Sentry instance. Defaults to `https://sentry.io/api/0` for sentry.io. If self-hosting, set this to the fully qualified domain name of your instance, e.g. `https://mysentryinstance.com/api/v0`
+- `baseSentryURL`: Fully qualified URL of Sentry instance. Defaults to `https://sentry.io/api/0` for sentry.io. If self-hosting, set this to the fully qualified domain name of your instance, e.g. `https://mysentryinstance.com/api/0`
 
 - `deleteAfterCompile`: Boolean determining whether source maps should be deleted on the build server after the webpack compile finishes. Defaults to `false`
 
