@@ -6,6 +6,7 @@ const BASE_SENTRY_URL = 'https://sentry.io/api/0'
 const DEFAULT_INCLUDE = /\.js$|\.map$/
 const DEFAULT_TRANSFORM = filename => `~/${filename}`
 const DEFAULT_DELETE_REGEX = /\.map$/
+const DEFAULT_REMOVE_SOURCE_MAP_URLS_REGEX = /\.js$/
 const DEFAULT_BODY_TRANSFORM = (version, projects) => ({ version, projects })
 
 module.exports = class SentryPlugin {
@@ -61,14 +62,19 @@ module.exports = class SentryPlugin {
       // eslint-disable-next-line no-console
       console.warn(
         'requestOptions is deprecated. ' +
-        'use createReleaseRequestOptions and ' +
-        'uploadFileRequestOptions instead; ' +
-        'see https://github.com/40thieves/webpack-sentry-plugin/pull/43'
+          'use createReleaseRequestOptions and ' +
+          'uploadFileRequestOptions instead; ' +
+          'see https://github.com/40thieves/webpack-sentry-plugin/pull/43',
       )
     }
 
     this.deleteAfterCompile = options.deleteAfterCompile
     this.deleteRegex = options.deleteRegex || DEFAULT_DELETE_REGEX
+
+    this.removeSourceMapUrlsAfterCompile =
+      options.removeSourceMapUrlsAfterCompile
+    this.removeSourceMapUrlsRegex =
+      options.removeSourceMapUrlsRegex || DEFAULT_REMOVE_SOURCE_MAP_URLS_REGEX
   }
 
   apply(compiler) {
@@ -101,6 +107,10 @@ module.exports = class SentryPlugin {
     compiler.plugin('done', (stats) => {
       if (this.deleteAfterCompile) {
         this.deleteFiles(stats)
+      }
+
+      if (this.removeSourceMapUrlsAfterCompile) {
+        this.removeSourceMapUrls(stats)
       }
     })
   }
@@ -223,6 +233,20 @@ module.exports = class SentryPlugin {
       .forEach((name) => {
         const { existsAt } = stats.compilation.assets[name]
         fs.unlinkSync(existsAt)
+      })
+  }
+
+  removeSourceMapUrls(stats) {
+    Object.keys(stats.compilation.assets)
+      .filter(name => this.removeSourceMapUrlsRegex.test(name))
+      .forEach((name) => {
+        const { existsAt } = stats.compilation.assets[name]
+        const content = fs.readFileSync(existsAt).toString()
+        const cleanedContent = content.replace(
+          /\n\/\/# sourceMappingURL=[^\n]+$/,
+          '',
+        )
+        fs.writeFileSync(existsAt, cleanedContent)
       })
   }
 }

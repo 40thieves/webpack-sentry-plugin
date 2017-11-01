@@ -120,4 +120,19 @@ describe('uploading files to Sentry release', () => {
         fs.existsSync(path.join(OUTPUT_PATH, 'index.bundle.js.map')),
       ).toEqual(false)
     }))
+
+  it('removes source map urls after compilation', () =>
+    runWebpack(
+      createWebpackConfig({
+        release,
+        removeSourceMapUrlsAfterCompile: true,
+      }),
+    ).then(() => {
+      expect(
+        fs
+          .readFileSync(path.join(OUTPUT_PATH, 'index.bundle.js'))
+          .toString()
+          .match(/\n\/\/# sourceMappingURL=[^\n]+$/),
+      ).toEqual(null)
+    }))
 })
