@@ -50,12 +50,14 @@ module.exports = class SentryPlugin {
     this.createReleaseRequestOptions =
       options.createReleaseRequestOptions || options.requestOptions || {}
     if (typeof this.createReleaseRequestOptions === 'object') {
-      this.createReleaseRequestOptions = () => this.createReleaseRequestOptions
+      const createReleaseRequestOptions = this.createReleaseRequestOptions
+      this.createReleaseRequestOptions = () => createReleaseRequestOptions
     }
     this.uploadFileRequestOptions =
       options.uploadFileRequestOptions || options.requestOptions || {}
     if (typeof this.uploadFileRequestOptions === 'object') {
-      this.uploadFileRequestOptions = () => this.uploadFileRequestOptions
+      const uploadFileRequestOptions = this.uploadFileRequestOptions
+      this.uploadFileRequestOptions = () => uploadFileRequestOptions
     }
     if (options.requestOptions) {
       // eslint-disable-next-line no-console
