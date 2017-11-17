@@ -6,7 +6,7 @@ module.exports = {
     },
     prepublish: {
       description: 'Validate and build before release',
-      script: 'nps validate && nps build'
+      script: 'nps build'
     },
     validate: {
       description: 'Runs code formatting, linting and tests',
