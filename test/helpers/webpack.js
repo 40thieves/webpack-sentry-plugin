@@ -11,6 +11,7 @@ export function createWebpackConfig(sentryConfig, webpackConfig) {
   return Object.assign(
     {},
     {
+      mode: 'none',
       devtool: 'source-map',
       entry: {
         index: path.resolve(__dirname, '../fixtures/index.js'),
