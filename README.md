@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/40thieves/webpack-sentry-plugin.svg?branch=master)](https://travis-ci.org/40thieves/webpack-sentry-plugin)
 
-A webpack (1, 2, or 3) plugin to upload source maps to [Sentry](https://sentry.io/).
+A webpack (1, 2, 3 or 4) plugin to upload source maps to [Sentry](https://sentry.io/).
 
 ### Installation
 
