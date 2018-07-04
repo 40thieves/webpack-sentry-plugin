@@ -8,7 +8,7 @@ const DEFAULT_INCLUDE = /\.js$|\.map$/
 const DEFAULT_TRANSFORM = filename => `~/${filename}`
 const DEFAULT_DELETE_REGEX = /\.map$/
 const DEFAULT_BODY_TRANSFORM = (version, projects) => ({ version, projects })
-const DEFAULT_UPLOAD_CONCURRENCY = 10
+const DEFAULT_UPLOAD_FILES_CONCURRENCY = Infinity
 
 module.exports = class SentryPlugin {
   constructor(options) {
@@ -73,6 +73,8 @@ module.exports = class SentryPlugin {
 
     this.deleteAfterCompile = options.deleteAfterCompile
     this.deleteRegex = options.deleteRegex || DEFAULT_DELETE_REGEX
+    this.uploadFilesConcurrency =
+      options.uploadFilesConcurrency || DEFAULT_UPLOAD_FILES_CONCURRENCY
   }
 
   apply(compiler) {
@@ -200,7 +202,7 @@ module.exports = class SentryPlugin {
       }
 
       return this.uploadFile(file)
-    }, DEFAULT_UPLOAD_CONCURRENCY)
+    }, this.uploadFilesConcurrency)
     return pool.start()
   }
 
