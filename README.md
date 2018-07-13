@@ -38,7 +38,7 @@ var config = {
      organization: 'your-organization-name',
      project: 'your-project-name',
      apiKey: process.env.SENTRY_API_KEY,
-     
+
      // Release version name/hash is required
      release: process.env.GIT_SHA
    })
@@ -98,7 +98,7 @@ var config = {
   ]
 }
 ```
-  
+
 - `releaseBody`: Object or function that returns the body that will be sent to Sentry. Defaults to sending the version and projects (which is sufficient to create a basic new release in Sentry).
   - The function is given two arguments: `version` and `projects`. `version` is the result of the `release` object (string or function output); `projects` is the `project` configuration parameter (converted to an array if a single string is provided).
   - The most common use case for overriding this field is Sentry's [release commits](https://docs.sentry.io/learn/releases/#releases-are-better-with-commits) feature. To use this, define `releaseBody` per the example below (providing the most recent commit hash through whatever means works best for your build setup). See the Sentry documentation for more details and options.
@@ -108,7 +108,7 @@ var config = {
   plugins: [
     new SentryPlugin({
       releaseBody: function(version, projects) {
-        return { 
+        return {
           version,
           projects,
           refs: [{
@@ -136,6 +136,8 @@ var config = {
 - `uploadFileRequestOptions`: Object of options or function returning object of options passed through to the underlying `request` call on file uploading; see the [request library documentation](https://github.com/request/request#requestoptions-callback) for available options.
   - If a function is provided, it is given one argument: req, an object of options (including url, auth, and body) that the plugin is sending to the underlying request call. (This is useful if you want to configure the request dynamically based on request data such as the filename.)
 
+- `uploadFilesConcurrency`: Number of maximum concurrent uploads of source files to the Sentry API. Use this when the number of source files to upload to Sentry is high and you encounter the `RequestError: Error: getaddrinfo ENOTFOUND sentry.io sentry.io:443` error.
+
 ### What is a `release`?
 
 A [release](https://docs.sentry.io/learn/releases/) is a concept that Sentry uses to attach source maps to a known version of your code. The plugin creates one for you, but you need to provide a "name" for a particular version of your code, which is just a string. Sentry can then use the release to record that an error was found in a specific known version of your code. Releases are also used to "version" your source maps -- source maps are uploaded to a specific release, and when a raw JavaScript error is reported, the release reported with the error is used to locate and apply the correct source maps.
@@ -148,7 +150,7 @@ A git commit hash is very useful for releases - it is a string that defines a pa
 new SentryPlugin({
   // ...
   release: function() {
-    // Note: this is just an example, it depends on your deployment pipeline 
+    // Note: this is just an example, it depends on your deployment pipeline
     return process.env.SOURCE_VERSION;
   }
 });
