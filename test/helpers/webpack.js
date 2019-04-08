@@ -14,15 +14,15 @@ export function createWebpackConfig(sentryConfig, webpackConfig) {
       mode: 'none',
       devtool: 'source-map',
       entry: {
-        index: path.resolve(__dirname, '../fixtures/index.js'),
+        index: path.resolve(__dirname, '../fixtures/index.js')
       },
       output: {
         path: OUTPUT_PATH,
-        filename: '[name].bundle.js',
+        filename: '[name].bundle.js'
       },
-      plugins: [configureSentryPlugin(sentryConfig)],
+      plugins: [configureSentryPlugin(sentryConfig)]
     },
-    webpackConfig,
+    webpackConfig
   )
 }
 
@@ -32,9 +32,9 @@ function configureSentryPlugin(config) {
     {
       organization: SENTRY_ORGANIZATION,
       project: SENTRY_PROJECT,
-      apiKey: SENTRY_API_KEY,
+      apiKey: SENTRY_API_KEY
     },
-    config,
+    config
   )
 
   return new SentryWebpackPlugin(options)

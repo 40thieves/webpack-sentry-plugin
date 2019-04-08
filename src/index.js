@@ -22,7 +22,7 @@ module.exports = class SentryPlugin {
         // eslint-disable-next-line no-console
         console.warn(
           "baseSentryURL with '/projects' suffix is deprecated; " +
-            'see https://github.com/40thieves/webpack-sentry-plugin/issues/38',
+            'see https://github.com/40thieves/webpack-sentry-plugin/issues/38'
         )
         this.baseSentryURL = options.baseSentryURL.replace(projectsRegex, '')
       }
@@ -66,9 +66,9 @@ module.exports = class SentryPlugin {
       // eslint-disable-next-line no-console
       console.warn(
         'requestOptions is deprecated. ' +
-        'use createReleaseRequestOptions and ' +
-        'uploadFileRequestOptions instead; ' +
-        'see https://github.com/40thieves/webpack-sentry-plugin/pull/43'
+          'use createReleaseRequestOptions and ' +
+          'uploadFileRequestOptions instead; ' +
+          'see https://github.com/40thieves/webpack-sentry-plugin/pull/43'
       )
     }
 
@@ -79,47 +79,41 @@ module.exports = class SentryPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.afterEmit.tapPromise(
-      'SentryPlugin',
-      async (compilation) => {
-        const errors = this.ensureRequiredOptions()
+    compiler.hooks.afterEmit.tapPromise('SentryPlugin', async (compilation) => {
+      const errors = this.ensureRequiredOptions()
 
-        if (errors) {
-          this.handleErrors(errors, compilation)
-          return
-        }
-
-        const files = this.getFiles(compiler, compilation)
-
-        if (typeof this.releaseVersion === 'function') {
-          this.releaseVersion = this.releaseVersion(compilation.hash)
-        }
-
-        if (typeof this.releaseBody === 'function') {
-          this.releaseBody = this.releaseBody(
-            this.releaseVersion,
-            this.projectSlug,
-          )
-        }
-
-        try {
-          await this.createRelease()
-          await this.uploadFiles(files)
-        }
-        catch (error) {
-          this.handleErrors(error, compilation)
-        }
+      if (errors) {
+        this.handleErrors(errors, compilation)
+        return
       }
-    )
 
-    compiler.hooks.done.tapPromise(
-      'SentryPlugin',
-      async (stats) => {
-        if (this.deleteAfterCompile) {
-          await this.deleteFiles(compiler, stats)
-        }
+      const files = this.getFiles(compiler, compilation)
+
+      if (typeof this.releaseVersion === 'function') {
+        this.releaseVersion = this.releaseVersion(compilation.hash)
       }
-    )
+
+      if (typeof this.releaseBody === 'function') {
+        this.releaseBody = this.releaseBody(
+          this.releaseVersion,
+          this.projectSlug
+        )
+      }
+
+      try {
+        await this.createRelease()
+        await this.uploadFiles(files)
+      }
+      catch (error) {
+        this.handleErrors(error, compilation)
+      }
+    })
+
+    compiler.hooks.done.tapPromise('SentryPlugin', async (stats) => {
+      if (this.deleteAfterCompile) {
+        await this.deleteFiles(compiler, stats)
+      }
+    })
   }
 
   handleErrors(err, compilation) {
@@ -157,10 +151,7 @@ module.exports = class SentryPlugin {
     return Object.keys(compilation.assets)
       .map((name) => {
         if (this.isIncludeOrExclude(name)) {
-          const filePath = path.join(
-            compiler.options.output.path,
-            name
-          )
+          const filePath = path.join(compiler.options.output.path, name)
           return { name, filePath }
         }
         return null
@@ -195,15 +186,15 @@ module.exports = class SentryPlugin {
           url: `${this.sentryReleaseUrl()}/`,
           method: 'POST',
           auth: {
-            bearer: this.apiKey,
+            bearer: this.apiKey
           },
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify(this.releaseBody),
+          body: JSON.stringify(this.releaseBody)
         },
-        this.createReleaseRequestOptions,
-      ),
+        this.createReleaseRequestOptions
+      )
     )
   }
 
@@ -226,32 +217,30 @@ module.exports = class SentryPlugin {
           url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
           method: 'POST',
           auth: {
-            bearer: this.apiKey,
+            bearer: this.apiKey
           },
           headers: {},
           formData: {
             file: fs.createReadStream(filePath),
-            name: this.filenameTransform(name),
-          },
+            name: this.filenameTransform(name)
+          }
         },
-        this.uploadFileRequestOptions,
-      ),
+        this.uploadFileRequestOptions
+      )
     )
   }
 
   sentryReleaseUrl() {
-    return `${this.baseSentryURL}/organizations/${this
-      .organizationSlug}/releases`
+    return `${this.baseSentryURL}/organizations/${
+      this.organizationSlug
+    }/releases`
   }
 
   async deleteFiles(compiler, stats) {
     Object.keys(stats.compilation.assets)
       .filter(name => this.deleteRegex.test(name))
       .forEach((name) => {
-        const filePath = path.join(
-          compiler.options.output.path,
-          name
-        )
+        const filePath = path.join(compiler.options.output.path, name)
         fs.unlinkSync(filePath)
       })
   }
