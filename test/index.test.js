@@ -6,7 +6,7 @@ import { createWebpackConfig, runWebpack, OUTPUT_PATH } from './helpers/webpack'
 import {
   expectNoFailure,
   expectReleaseContainsFile,
-  expectReleaseDoesNotContainFile,
+  expectReleaseDoesNotContainFile
 } from './helpers/assertion'
 
 function ensureOutputPath() {
@@ -38,8 +38,8 @@ describe('creating Sentry release', () => {
 
     return runWebpack(
       createWebpackConfig({
-        release: () => release,
-      }),
+        release: () => release
+      })
     )
       .then(() => fetchRelease(release))
       .then(({ version }) => expect(version).toEqual(release))
@@ -63,15 +63,15 @@ describe('uploading files to Sentry release', () => {
       createWebpackConfig(
         {
           release,
-          include: /foo\.bundle\.js/,
+          include: /foo\.bundle\.js/
         },
         {
           entry: {
             foo: path.resolve(__dirname, 'fixtures/foo.js'),
-            bar: path.resolve(__dirname, 'fixtures/bar.js'),
-          },
-        },
-      ),
+            bar: path.resolve(__dirname, 'fixtures/bar.js')
+          }
+        }
+      )
     )
       .then(() => fetchFiles(release))
       .then(expectReleaseContainsFile('~/foo.bundle.js'))
@@ -84,15 +84,15 @@ describe('uploading files to Sentry release', () => {
       createWebpackConfig(
         {
           release,
-          exclude: /foo\.bundle\.js/,
+          exclude: /foo\.bundle\.js/
         },
         {
           entry: {
             foo: path.resolve(__dirname, 'fixtures/foo.js'),
-            bar: path.resolve(__dirname, 'fixtures/bar.js'),
-          },
-        },
-      ),
+            bar: path.resolve(__dirname, 'fixtures/bar.js')
+          }
+        }
+      )
     )
       .then(() => fetchFiles(release))
       .then(expectReleaseDoesNotContainFile('foo.bundle.js'))
@@ -103,8 +103,8 @@ describe('uploading files to Sentry release', () => {
       createWebpackConfig({
         release,
         include: /index\.bundle\.js\.map/,
-        filenameTransform: filename => `a-filename-prefix-${filename}`,
-      }),
+        filenameTransform: filename => `a-filename-prefix-${filename}`
+      })
     )
       .then(() => fetchFiles(release))
       .then(expectReleaseContainsFile('a-filename-prefix-index.bundle.js.map')))
@@ -113,11 +113,11 @@ describe('uploading files to Sentry release', () => {
     runWebpack(
       createWebpackConfig({
         release,
-        deleteAfterCompile: true,
-      }),
+        deleteAfterCompile: true
+      })
     ).then(() => {
       expect(
-        fs.existsSync(path.join(OUTPUT_PATH, 'index.bundle.js.map')),
+        fs.existsSync(path.join(OUTPUT_PATH, 'index.bundle.js.map'))
       ).toEqual(false)
     }))
 })

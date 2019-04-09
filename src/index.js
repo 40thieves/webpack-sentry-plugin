@@ -1,4 +1,5 @@
 import request from 'request-promise'
+import path from 'path'
 import fs from 'fs'
 import PromisePool from 'es6-promise-pool'
 
@@ -21,7 +22,7 @@ module.exports = class SentryPlugin {
         // eslint-disable-next-line no-console
         console.warn(
           "baseSentryURL with '/projects' suffix is deprecated; " +
-            'see https://github.com/40thieves/webpack-sentry-plugin/issues/38',
+            'see https://github.com/40thieves/webpack-sentry-plugin/issues/38'
         )
         this.baseSentryURL = options.baseSentryURL.replace(projectsRegex, '')
       }
@@ -52,22 +53,22 @@ module.exports = class SentryPlugin {
     this.createReleaseRequestOptions =
       options.createReleaseRequestOptions || options.requestOptions || {}
     if (typeof this.createReleaseRequestOptions === 'object') {
-      const createReleaseRequestOptions = this.createReleaseRequestOptions
+      const { createReleaseRequestOptions } = this
       this.createReleaseRequestOptions = () => createReleaseRequestOptions
     }
     this.uploadFileRequestOptions =
       options.uploadFileRequestOptions || options.requestOptions || {}
     if (typeof this.uploadFileRequestOptions === 'object') {
-      const uploadFileRequestOptions = this.uploadFileRequestOptions
+      const { uploadFileRequestOptions } = this
       this.uploadFileRequestOptions = () => uploadFileRequestOptions
     }
     if (options.requestOptions) {
       // eslint-disable-next-line no-console
       console.warn(
         'requestOptions is deprecated. ' +
-        'use createReleaseRequestOptions and ' +
-        'uploadFileRequestOptions instead; ' +
-        'see https://github.com/40thieves/webpack-sentry-plugin/pull/43'
+          'use createReleaseRequestOptions and ' +
+          'uploadFileRequestOptions instead; ' +
+          'see https://github.com/40thieves/webpack-sentry-plugin/pull/43'
       )
     }
 
@@ -78,14 +79,15 @@ module.exports = class SentryPlugin {
   }
 
   apply(compiler) {
-    compiler.plugin('after-emit', (compilation, cb) => {
+    compiler.hooks.afterEmit.tapPromise('SentryPlugin', async (compilation) => {
       const errors = this.ensureRequiredOptions()
 
       if (errors) {
-        return this.handleErrors(errors, compilation, cb)
+        this.handleErrors(errors, compilation)
+        return
       }
 
-      const files = this.getFiles(compilation)
+      const files = this.getFiles(compiler, compilation)
 
       if (typeof this.releaseVersion === 'function') {
         this.releaseVersion = this.releaseVersion(compilation.hash)
@@ -94,24 +96,27 @@ module.exports = class SentryPlugin {
       if (typeof this.releaseBody === 'function') {
         this.releaseBody = this.releaseBody(
           this.releaseVersion,
-          this.projectSlug,
+          this.projectSlug
         )
       }
 
-      return this.createRelease()
-        .then(() => this.uploadFiles(files))
-        .then(() => cb())
-        .catch(err => this.handleErrors(err, compilation, cb))
+      try {
+        await this.createRelease()
+        await this.uploadFiles(files)
+      }
+      catch (error) {
+        this.handleErrors(error, compilation)
+      }
     })
 
-    compiler.plugin('done', (stats) => {
+    compiler.hooks.done.tapPromise('SentryPlugin', async (stats) => {
       if (this.deleteAfterCompile) {
-        this.deleteFiles(stats)
+        await this.deleteFiles(compiler, stats)
       }
     })
   }
 
-  handleErrors(err, compilation, cb) {
+  handleErrors(err, compilation) {
     const errorMsg = `Sentry Plugin: ${err}`
     if (
       this.suppressErrors ||
@@ -122,8 +127,6 @@ module.exports = class SentryPlugin {
     else {
       compilation.errors.push(errorMsg)
     }
-
-    cb()
   }
 
   ensureRequiredOptions() {
@@ -144,11 +147,12 @@ module.exports = class SentryPlugin {
     }
   }
 
-  getFiles(compilation) {
+  getFiles(compiler, compilation) {
     return Object.keys(compilation.assets)
       .map((name) => {
         if (this.isIncludeOrExclude(name)) {
-          return { name, path: compilation.assets[name].existsAt }
+          const filePath = path.join(compiler.options.output.path, name)
+          return { name, filePath }
         }
         return null
       })
@@ -175,22 +179,22 @@ module.exports = class SentryPlugin {
     return combined
   }
 
-  createRelease() {
-    return request(
+  async createRelease() {
+    await request(
       this.combineRequestOptions(
         {
           url: `${this.sentryReleaseUrl()}/`,
           method: 'POST',
           auth: {
-            bearer: this.apiKey,
+            bearer: this.apiKey
           },
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify(this.releaseBody),
+          body: JSON.stringify(this.releaseBody)
         },
-        this.createReleaseRequestOptions,
-      ),
+        this.createReleaseRequestOptions
+      )
     )
   }
 
@@ -206,37 +210,38 @@ module.exports = class SentryPlugin {
     return pool.start()
   }
 
-  uploadFile({ path, name }) {
-    return request(
+  async uploadFile({ filePath, name }) {
+    await request(
       this.combineRequestOptions(
         {
           url: `${this.sentryReleaseUrl()}/${this.releaseVersion}/files/`,
           method: 'POST',
           auth: {
-            bearer: this.apiKey,
+            bearer: this.apiKey
           },
           headers: {},
           formData: {
-            file: fs.createReadStream(path),
-            name: this.filenameTransform(name),
-          },
+            file: fs.createReadStream(filePath),
+            name: this.filenameTransform(name)
+          }
         },
-        this.uploadFileRequestOptions,
-      ),
+        this.uploadFileRequestOptions
+      )
     )
   }
 
   sentryReleaseUrl() {
-    return `${this.baseSentryURL}/organizations/${this
-      .organizationSlug}/releases`
+    return `${this.baseSentryURL}/organizations/${
+      this.organizationSlug
+    }/releases`
   }
 
-  deleteFiles(stats) {
+  async deleteFiles(compiler, stats) {
     Object.keys(stats.compilation.assets)
       .filter(name => this.deleteRegex.test(name))
       .forEach((name) => {
-        const { existsAt } = stats.compilation.assets[name]
-        fs.unlinkSync(existsAt)
+        const filePath = path.join(compiler.options.output.path, name)
+        fs.unlinkSync(filePath)
       })
   }
 }

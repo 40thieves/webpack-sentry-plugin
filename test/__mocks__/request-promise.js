@@ -1,11 +1,11 @@
 const responses = {
   release: {
     'bad-release': () => Promise.reject(new Error('Release request error')),
-    'bad-upload': () => Promise.resolve(),
+    'bad-upload': () => Promise.resolve()
   },
   upload: {
-    'bad-upload': () => Promise.reject(new Error('Upload request error')),
-  },
+    'bad-upload': () => Promise.reject(new Error('Upload request error'))
+  }
 }
 
 /* eslint-disable consistent-return */
