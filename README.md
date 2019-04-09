@@ -2,7 +2,10 @@
 
 [![Build Status](https://travis-ci.org/40thieves/webpack-sentry-plugin.svg?branch=master)](https://travis-ci.org/40thieves/webpack-sentry-plugin)
 
-A webpack (1, 2, 3 or 4) plugin to upload source maps to [Sentry](https://sentry.io/).
+A webpack plugin to upload source maps to [Sentry](https://sentry.io/).
+The current version 2 is compatible with webpack 4 and 5 and requires at least NodeJS 6.
+
+If you are running on webpack 1, 2 or 3, please use the dedicated version 1 of the module (latest is currently `1.16.0`), which provides the same API.
 
 ### Installation
 
