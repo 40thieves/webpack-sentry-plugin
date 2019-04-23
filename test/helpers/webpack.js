@@ -1,4 +1,5 @@
 import path from 'path'
+import replayer from 'replayer'
 import webpack from 'webpack'
 
 import SentryWebpackPlugin from '../../src/index'
@@ -6,6 +7,23 @@ import SentryWebpackPlugin from '../../src/index'
 import { SENTRY_API_KEY, SENTRY_ORGANIZATION, SENTRY_PROJECT } from './sentry'
 
 export const OUTPUT_PATH = path.resolve(__dirname, '../../.tmp')
+
+replayer.filter({
+  url: /(.*)/,
+  bodyFilter: (body) => {
+    // Form data payloads start and end with a sentinel
+    // that changes on every request. Strip it off and
+    // only consider the actual file body.
+    if (body.startsWith('-----')) {
+      const parts = body.split('\r\n')
+      return parts.slice(1, parts.length - 6).join('\r\n')
+    }
+    return body
+  }
+})
+replayer.substitute('test-organization', () => SENTRY_ORGANIZATION)
+replayer.substitute('test-project', () => SENTRY_PROJECT)
+replayer.substitute('test-api-key', () => SENTRY_API_KEY)
 
 export function createWebpackConfig(sentryConfig, webpackConfig) {
   return Object.assign(
