@@ -1,0 +1,28 @@
+{
+  "statusCode": 200,
+  "headers": {
+    "server": "nginx",
+    "date": "Wed, 15 May 2019 17:20:15 GMT",
+    "content-type": "application/json",
+    "content-length": "389",
+    "connection": "keep-alive",
+    "x-xss-protection": "1; mode=block",
+    "content-language": "en",
+    "x-content-type-options": "nosniff",
+    "vary": "Accept-Language, Cookie",
+    "allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+    "x-frame-options": "deny",
+    "x-served-by": "web-17b74f97",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload"
+  },
+  "url": "http://sentry.io:443/api/0/projects/test-organization/test-project/releases/string-release/",
+  "time": 259,
+  "request": {
+    "method": "GET",
+    "headers": {
+      "host": "sentry.io",
+      "authorization": "Bearer test-api-key",
+      "accept": "application/json"
+    }
+  }
+}
