@@ -1,0 +1,29 @@
+{
+  "statusCode": 200,
+  "headers": {
+    "server": "nginx",
+    "date": "Wed, 15 May 2019 17:20:17 GMT",
+    "content-type": "application/json",
+    "content-length": "454",
+    "connection": "keep-alive",
+    "x-xss-protection": "1; mode=block",
+    "x-content-type-options": "nosniff",
+    "content-language": "en",
+    "vary": "Accept-Language, Cookie",
+    "link": "<https://sentry.io/api/0/projects/test-organization/test-project/releases/test-source-and-map/files/?&cursor=100:-1:1>; rel=\"previous\"; results=\"false\"; cursor=\"100:-1:1\", <https://sentry.io/api/0/projects/test-organization/test-project/releases/test-source-and-map/files/?&cursor=100:1:0>; rel=\"next\"; results=\"false\"; cursor=\"100:1:0\"",
+    "allow": "GET, POST, HEAD, OPTIONS",
+    "x-frame-options": "deny",
+    "x-served-by": "web-17b74f97",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload"
+  },
+  "url": "https://sentry.io:443/api/0/projects/test-organization/test-project/releases/test-source-and-map/files/",
+  "time": 210,
+  "request": {
+    "method": "GET",
+    "headers": {
+      "host": "sentry.io",
+      "authorization": "Bearer test-api-key",
+      "accept": "application/json"
+    }
+  }
+}

@@ -12,6 +12,7 @@ replayer.configure({
   includeHeaderNames: false,
   includeCookieNames: false
 })
+replayer.fixtureDir(path.join(__dirname, '..', 'fixtures', 'replayer'))
 replayer.filter({
   url: /(.*)/,
   bodyFilter: (body) => {

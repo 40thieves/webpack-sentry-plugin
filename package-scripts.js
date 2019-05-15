@@ -26,7 +26,7 @@ module.exports = {
     },
     'test:record': {
       description: 'Run tests + regenerate fixtures with real Sentry instance',
-      script: 'rm -rf ./fixtures && VCR_MODE=record jest'
+      script: 'rm ./test/fixtures/replayer/* && VCR_MODE=record jest'
     }
   }
 }
