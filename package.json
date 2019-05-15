@@ -17,7 +17,11 @@
   ],
   "scripts": {
     "start": "nps",
+    "format": "nps format",
+    "lint": "nps lint",
     "test": "nps test",
+    "test:record": "nps test:record",
+    "validate": "nps validate",
     "prepublish": "nps prepublish",
     "precommit": "opt --in pre-commit --exec \"nps format lint\"",
     "prepush": "opt --in pre-push --exec \"nps validate\""
@@ -52,12 +56,12 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.10.0",
-    "husky": "^0.14.3",
     "jest": "^24.7.1",
     "nps": "^5.9.0",
     "opt-cli": "^1.6.0",
     "prettier": "^1.11.1",
     "prettier-eslint-cli": "^4.7.1",
+    "replayer": "^2.2.3",
     "webpack": "^4.5.0"
   },
   "peerDependencies": {

@@ -48,17 +48,17 @@ describe('creating Sentry release', () => {
 })
 
 describe('uploading files to Sentry release', () => {
-  const release = 'test-release'
-
-  afterEach(cleanUpRelease(release))
-
-  it('uploads source and matching source map', () =>
+  it('uploads source and matching source map', () => {
+    const release = 'test-source-and-map'
     runWebpack(createWebpackConfig({ release }))
       .then(() => fetchFiles(release))
       .then(expectReleaseContainsFile('~/index.bundle.js'))
-      .then(expectReleaseContainsFile('~/index.bundle.js.map')))
+      .then(expectReleaseContainsFile('~/index.bundle.js.map'))
+    cleanUpRelease(release)
+  })
 
-  it('filters files based on include', () =>
+  it('filters files based on include', () => {
+    const release = 'test-filter-include'
     runWebpack(
       createWebpackConfig(
         {
@@ -77,9 +77,12 @@ describe('uploading files to Sentry release', () => {
       .then(expectReleaseContainsFile('~/foo.bundle.js'))
       .then(expectReleaseContainsFile('~/foo.bundle.js.map'))
       .then(expectReleaseDoesNotContainFile('~/bar.bundle.js'))
-      .then(expectReleaseDoesNotContainFile('~/bar.bundle.js.map')))
+      .then(expectReleaseDoesNotContainFile('~/bar.bundle.js.map'))
+    cleanUpRelease(release)
+  })
 
-  it('filters files based on exclude', () =>
+  it('filters files based on exclude', () => {
+    const release = 'test-filter-exclude'
     runWebpack(
       createWebpackConfig(
         {
@@ -96,9 +99,12 @@ describe('uploading files to Sentry release', () => {
     )
       .then(() => fetchFiles(release))
       .then(expectReleaseDoesNotContainFile('foo.bundle.js'))
-      .then(expectReleaseDoesNotContainFile('foo.bundle.js.map')))
+      .then(expectReleaseDoesNotContainFile('foo.bundle.js.map'))
+    cleanUpRelease(release)
+  })
 
-  it('transforms filename', () =>
+  it('transforms filename', () => {
+    const release = 'test-transform-filename'
     runWebpack(
       createWebpackConfig({
         release,
@@ -107,9 +113,12 @@ describe('uploading files to Sentry release', () => {
       })
     )
       .then(() => fetchFiles(release))
-      .then(expectReleaseContainsFile('a-filename-prefix-index.bundle.js.map')))
+      .then(expectReleaseContainsFile('a-filename-prefix-index.bundle.js.map'))
+    cleanUpRelease(release)
+  })
 
-  it('removes source maps after compilation', () =>
+  it('removes source maps after compilation', () => {
+    const release = 'test-removal'
     runWebpack(
       createWebpackConfig({
         release,
@@ -119,5 +128,7 @@ describe('uploading files to Sentry release', () => {
       expect(
         fs.existsSync(path.join(OUTPUT_PATH, 'index.bundle.js.map'))
       ).toEqual(false)
-    }))
+    })
+    cleanUpRelease(release)
+  })
 })

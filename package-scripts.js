@@ -10,13 +10,23 @@ module.exports = {
     },
     validate: {
       description: 'Runs code formatting, linting and tests',
-      script: 'nps format lint test'
+      script: 'nps lint test'
     },
     format: {
       description: 'Format code with prettier-eslint',
       script: 'prettier-eslint --write "{src,test}/**/*.js"'
     },
-    lint: 'eslint src test; exit 0',
-    test: 'jest'
+    lint: {
+      description: 'Run eslint to ensure code is correctly formatted',
+      script: 'eslint src test'
+    },
+    test: {
+      description: 'Run tests, using stored fixtures for Sentry responses',
+      script: 'VCR_MODE=playback jest'
+    },
+    'test:record': {
+      description: 'Run tests + regenerate fixtures with real Sentry instance',
+      script: 'rm -rf ./fixtures && VCR_MODE=record jest'
+    }
   }
-};
+}
