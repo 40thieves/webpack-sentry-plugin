@@ -1,0 +1,29 @@
+{
+  "statusCode": 201,
+  "headers": {
+    "server": "nginx",
+    "date": "Wed, 15 May 2019 16:48:18 GMT",
+    "content-type": "application/json",
+    "content-length": "226",
+    "connection": "keep-alive",
+    "x-xss-protection": "1; mode=block",
+    "content-language": "en",
+    "x-content-type-options": "nosniff",
+    "vary": "Accept-Language, Cookie",
+    "allow": "GET, POST, HEAD, OPTIONS",
+    "x-frame-options": "deny",
+    "x-served-by": "web-0df6213e",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload"
+  },
+  "url": "http://sentry.io:443/api/0/organizations/test-organization/releases/test-removal/files/",
+  "time": 202,
+  "request": {
+    "method": "POST",
+    "headers": {
+      "host": "sentry.io",
+      "authorization": "Bearer test-api-key",
+      "content-type": "multipart/form-data; boundary=--------------------------992977061325517873234463",
+      "content-length": 3295
+    }
+  }
+}

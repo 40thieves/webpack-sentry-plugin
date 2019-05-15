@@ -8,6 +8,10 @@ import { SENTRY_API_KEY, SENTRY_ORGANIZATION, SENTRY_PROJECT } from './sentry'
 
 export const OUTPUT_PATH = path.resolve(__dirname, '../../.tmp')
 
+replayer.configure({
+  includeHeaderNames: false,
+  includeCookieNames: false
+})
 replayer.filter({
   url: /(.*)/,
   bodyFilter: (body) => {
@@ -18,7 +22,15 @@ replayer.filter({
       const parts = body.split('\r\n')
       return parts.slice(1, parts.length - 6).join('\r\n')
     }
-    return body
+    const bodyProjectRegex = new RegExp(SENTRY_PROJECT)
+    return body.replace(bodyProjectRegex, 'test-project')
+  },
+  urlFilter: (url) => {
+    const orgRegex = new RegExp(`/${SENTRY_ORGANIZATION}`)
+    const projectRegex = new RegExp(`/${SENTRY_PROJECT}`)
+    return url
+      .replace(orgRegex, '/test-organization')
+      .replace(projectRegex, '/test-project')
   }
 })
 replayer.substitute('test-organization', () => SENTRY_ORGANIZATION)
