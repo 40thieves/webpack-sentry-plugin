@@ -1,5 +1,4 @@
 import request from 'request-promise'
-import path from 'path'
 import fs from 'fs'
 import PromisePool from 'es6-promise-pool'
 
