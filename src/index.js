@@ -1,5 +1,4 @@
 import request from 'request-promise'
-import path from 'path'
 import fs from 'fs'
 import PromisePool from 'es6-promise-pool'
 
@@ -87,7 +86,7 @@ module.exports = class SentryPlugin {
         return
       }
 
-      const files = this.getFiles(compiler, compilation)
+      const files = this.getFiles(compilation)
 
       if (typeof this.releaseVersion === 'function') {
         this.releaseVersion = this.releaseVersion(compilation.hash)
@@ -111,7 +110,7 @@ module.exports = class SentryPlugin {
 
     compiler.hooks.done.tapPromise('SentryPlugin', async (stats) => {
       if (this.deleteAfterCompile) {
-        await this.deleteFiles(compiler, stats)
+        await this.deleteFiles(stats)
       }
     })
   }
@@ -147,12 +146,11 @@ module.exports = class SentryPlugin {
     }
   }
 
-  getFiles(compiler, compilation) {
+  getFiles(compilation) {
     return Object.keys(compilation.assets)
       .map((name) => {
         if (this.isIncludeOrExclude(name)) {
-          const filePath = path.join(compiler.options.output.path, name)
-          return { name, filePath }
+          return { name, filePath: compilation.assets[name].existsAt }
         }
         return null
       })
@@ -236,11 +234,11 @@ module.exports = class SentryPlugin {
     }/releases`
   }
 
-  async deleteFiles(compiler, stats) {
+  async deleteFiles(stats) {
     Object.keys(stats.compilation.assets)
       .filter(name => this.deleteRegex.test(name))
       .forEach((name) => {
-        const filePath = path.join(compiler.options.output.path, name)
+        const filePath = stats.compilation.assets[name].existsAt
         fs.unlinkSync(filePath)
       })
   }
