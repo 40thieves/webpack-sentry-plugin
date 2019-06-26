@@ -239,7 +239,13 @@ module.exports = class SentryPlugin {
       .filter(name => this.deleteRegex.test(name))
       .forEach((name) => {
         const filePath = stats.compilation.assets[name].existsAt
-        fs.unlinkSync(filePath)
+        if (filePath) {
+          fs.unlinkSync(filePath)
+        }
+        else {
+          console.warn(`WebpackSentryPlugin: unable to delete ${name} - ` +
+            'probably the file was not created due to an error in the build')
+        }
       })
   }
 }
