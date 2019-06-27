@@ -243,8 +243,12 @@ module.exports = class SentryPlugin {
           fs.unlinkSync(filePath)
         }
         else {
-          console.warn(`WebpackSentryPlugin: unable to delete ${name} - ` +
-            'probably the file was not created due to an error in the build')
+          // eslint-disable-next-line no-console
+          console.warn(
+            `WebpackSentryPlugin: unable to delete '${name}'. ` +
+              'File does not exist; it may not have been created ' +
+              'due to a build error.'
+          )
         }
       })
   }
