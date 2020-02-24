@@ -21,6 +21,8 @@
     "lint": "nps lint",
     "test": "nps test",
     "test:record": "nps test:record",
+    "test:tav": "nps test:tav",
+    "test:tav:record": "nps test:tav:record",
     "validate": "nps validate",
     "prepublish": "nps prepublish",
     "precommit": "opt --in pre-commit --exec \"nps format lint\"",
@@ -62,7 +64,8 @@
     "prettier": "^1.11.1",
     "prettier-eslint-cli": "^4.7.1",
     "replayer": "^2.2.3",
-    "webpack": "^4.5.0"
+    "test-all-versions": "^4.1.1",
+    "webpack": "^5.0.0-beta.13"
   },
   "peerDependencies": {
     "webpack": "^4 || ^5.0.0-alpha.11"

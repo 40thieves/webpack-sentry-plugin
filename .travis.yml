@@ -3,4 +3,4 @@ node_js:
   - "node"
 script:
   - yarn lint
-  - yarn test
+  - yarn test:tav

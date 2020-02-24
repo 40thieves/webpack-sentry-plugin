@@ -1,5 +1,6 @@
 import request from 'request-promise'
 import fs from 'fs'
+import path from 'path'
 import PromisePool from 'es6-promise-pool'
 
 const BASE_SENTRY_URL = 'https://sentry.io/api/0'
@@ -146,11 +147,19 @@ module.exports = class SentryPlugin {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getAssetPath(compilation, name) {
+    return path.join(
+      compilation.getPath(compilation.compiler.outputPath),
+      name.split('?')[0]
+    )
+  }
+
   getFiles(compilation) {
     return Object.keys(compilation.assets)
       .map((name) => {
         if (this.isIncludeOrExclude(name)) {
-          return { name, filePath: compilation.assets[name].existsAt }
+          return { name, filePath: this.getAssetPath(compilation, name) }
         }
         return null
       })
@@ -238,7 +247,7 @@ module.exports = class SentryPlugin {
     Object.keys(stats.compilation.assets)
       .filter(name => this.deleteRegex.test(name))
       .forEach((name) => {
-        const filePath = stats.compilation.assets[name].existsAt
+        const filePath = this.getAssetPath(stats.compilation, name)
         if (filePath) {
           fs.unlinkSync(filePath)
         }
