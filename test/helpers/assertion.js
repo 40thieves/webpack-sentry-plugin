@@ -1,3 +1,5 @@
+import webpack from 'webpack'
+
 // Work around Jest not having expect.fail()
 export function expectNoFailure(msg) {
   return () => {
@@ -20,5 +22,14 @@ export function expectReleaseDoesNotContainFile(filename) {
     expect(filenames).not.toContain(filename)
 
     return Promise.resolve(files)
+  }
+}
+
+export function expectWebpackError(error, msg) {
+  if (webpack.version.startsWith('5.')) {
+    expect(error.message).toEqual(msg)
+  }
+  else {
+    expect(error).toEqual(msg)
   }
 }

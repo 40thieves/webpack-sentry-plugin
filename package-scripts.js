@@ -27,6 +27,15 @@ module.exports = {
     'test:record': {
       description: 'Run tests + regenerate fixtures with real Sentry instance',
       script: 'rm ./test/fixtures/replayer/* && VCR_MODE=record jest'
+    },
+    'test:tav': {
+      description: 'Run tests against all supported major versions',
+      script: 'VCR_MODE=playback tav'
+    },
+    'test:tav:record': {
+      description:
+        'Run tests against all supported major versions + regenerate fixtures',
+      script: 'VCR_MODE=record tav'
     }
   }
 }

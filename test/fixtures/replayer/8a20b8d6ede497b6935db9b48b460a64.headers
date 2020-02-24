@@ -1,0 +1,33 @@
+{
+  "statusCode": 201,
+  "headers": {
+    "server": "nginx",
+    "date": "Mon, 24 Feb 2020 20:34:50 GMT",
+    "content-type": "application/json",
+    "content-length": "214",
+    "connection": "keep-alive",
+    "access-control-allow-headers": "X-Sentry-Auth, X-Requested-With, Origin, Accept, Content-Type, Authentication, Authorization",
+    "x-content-type-options": "nosniff",
+    "content-language": "en",
+    "access-control-expose-headers": "X-Sentry-Error, Retry-After",
+    "vary": "Accept-Language, Cookie",
+    "x-xss-protection": "1; mode=block",
+    "allow": "GET, POST, HEAD, OPTIONS",
+    "access-control-allow-origin": "*",
+    "access-control-allow-methods": "GET, POST, HEAD, OPTIONS",
+    "x-frame-options": "deny",
+    "x-served-by": "web-ee8f0660",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload"
+  },
+  "url": "https://sentry.io:443/api/0/organizations/test-organization/releases/test-source-and-map/files/",
+  "time": 153,
+  "request": {
+    "method": "POST",
+    "headers": {
+      "host": "sentry.io",
+      "authorization": "Bearer test-api-key",
+      "content-type": "multipart/form-data; boundary=--------------------------340203326676939891987777",
+      "content-length": 2634
+    }
+  }
+}
