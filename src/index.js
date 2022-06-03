@@ -122,10 +122,10 @@ module.exports = class SentryPlugin {
       this.suppressErrors ||
       (this.suppressConflictError && err.statusCode === 409)
     ) {
-      compilation.warnings.push(errorMsg)
+      compilation.warnings.push(new Error(errorMsg))
     }
     else {
-      compilation.errors.push(errorMsg)
+      compilation.errors.push(new Error(errorMsg))
     }
   }
 
